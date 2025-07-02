@@ -1,33 +1,33 @@
-# Document Analysis Graph
+# 문서 분석 그래프
 
-Alfred at your service. As Mr. Wayne's trusted butler, I've taken the liberty of documenting how I assist Mr Wayne with his various documentary needs. While he's out attending to his... nighttime activities, I ensure all his paperwork, training schedules, and nutritional plans are properly analyzed and organized.
+알프레드가 도와드리겠습니다. Mr. Wayne의 신뢰받는 집사로서, 저는 Mr. Wayne의 다양한 문서 업무를 어떻게 지원하는지 기록해두었습니다. 그가 밤 활동을 하러 나간 동안, 저는 모든 서류, 훈련 일정, 영양 계획이 제대로 분석되고 정리되도록 합니다.
 
-Before leaving, he left a note with his week's training program. I then took the responsibility to come up with a **menu** for tomorrow's meals.
+그가 외출하기 전, 이번 주 훈련 프로그램이 적힌 쪽지를 남겼습니다. 저는 내일 식사를 위한 **메뉴**를 직접 짜기로 했죠.
 
-For future such events, let's create a document analysis system using LangGraph to serve Mr. Wayne's needs. This system can:
+앞으로도 이런 일이 있을 때를 대비해, LangGraph를 활용해 Mr. Wayne을 위한 문서 분석 시스템을 만들어봅시다. 이 시스템은 다음을 할 수 있습니다:
 
-1. Process images document
-2. Extract text using vision models (Vision Language Model)
-3. Perform calculations when needed (to demonstrate normal tools)
-4. Analyze content and provide concise summaries
-5. Execute specific instructions related to documents
+1. 이미지 문서 처리
+2. 비전 모델(비전 언어 모델)로 텍스트 추출
+3. 필요시 계산 수행(일반 툴 시연)
+4. 내용 분석 및 요약 제공
+5. 문서 관련 특정 지시 실행
 
-## The Butler's Workflow
+## 집사의 워크플로우
 
-The workflow we’ll build follows this structured schema:
+우리가 만들 워크플로우는 다음과 같은 구조를 따릅니다:
 
-![Butler's Document Analysis Workflow](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/LangGraph/alfred_flow.png)
+![집사의 문서 분석 워크플로우](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/LangGraph/alfred_flow.png)
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/langgraph/agent.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+<a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/langgraph/agent.ipynb" target="_blank">이 노트북</a>을 따라가며 Google Colab에서 코드를 실행해볼 수 있습니다.
 </Tip>
 
-## Setting Up the environment
+## 환경 설정
 
 ```python
 %pip install langgraph langchain_openai langchain_core
 ```
-and imports :
+그리고 임포트:
 ```python
 import base64
 from typing import List, TypedDict, Annotated, Optional
@@ -39,79 +39,57 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from IPython.display import Image, display
 ```
 
-## Defining Agent's State
+## 에이전트 상태 정의
 
-This state is a little more complex than the previous ones we have seen.
-`AnyMessage` is a class from Langchain that defines messages, and `add_messages` is an operator that adds the latest message rather than overwriting it with the latest state.
+이 상태는 앞서 본 것보다 조금 더 복잡합니다.
+`AnyMessage`는 Langchain의 메시지 클래스이고, `add_messages`는 최신 메시지를 누적하는 연산자입니다.
 
-This is a new concept in LangGraph, where you can add operators in your state to define the way they should interact together.
+LangGraph에서는 상태에 연산자를 추가해 상호작용 방식을 정의할 수 있습니다.
 
 ```python
 class AgentState(TypedDict):
-    # The document provided
-    input_file: Optional[str]  # Contains file path (PDF/PNG)
+    # 제공된 문서
+    input_file: Optional[str]  # 파일 경로(PDF/PNG)
     messages: Annotated[list[AnyMessage], add_messages]
 ```
 
-## Preparing Tools
+## 툴 준비하기
 
 ```python
 vision_llm = ChatOpenAI(model="gpt-4o")
 
 def extract_text(img_path: str) -> str:
     """
-    Extract text from an image file using a multimodal model.
+    멀티모달 모델로 이미지 파일에서 텍스트 추출
     
-    Master Wayne often leaves notes with his training regimen or meal plans.
-    This allows me to properly analyze the contents.
+    Wayne 주인님은 종종 훈련 일정이나 식단이 적힌 쪽지를 남깁니다.
+    이 기능으로 내용을 제대로 분석할 수 있습니다.
     """
     all_text = ""
     try:
-        # Read image and encode as base64
         with open(img_path, "rb") as image_file:
             image_bytes = image_file.read()
-
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
-
-        # Prepare the prompt including the base64 image data
         message = [
             HumanMessage(
                 content=[
-                    {
-                        "type": "text",
-                        "text": (
-                            "Extract all the text from this image. "
-                            "Return only the extracted text, no explanations."
-                        ),
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/png;base64,{image_base64}"
-                        },
-                    },
+                    {"type": "text", "text": "이 이미지에서 모든 텍스트를 추출하세요. 설명 없이 추출된 텍스트만 반환하세요."},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_base64}"}},
                 ]
             )
         ]
-
-        # Call the vision-capable model
         response = vision_llm.invoke(message)
-
-        # Append extracted text
         all_text += response.content + "\n\n"
-
         return all_text.strip()
     except Exception as e:
-        # A butler should handle errors gracefully
-        error_msg = f"Error extracting text: {str(e)}"
+        error_msg = f"텍스트 추출 오류: {str(e)}"
         print(error_msg)
         return ""
 
 def divide(a: int, b: int) -> float:
-    """Divide a and b - for Master Wayne's occasional calculations."""
+    """Wayne 주인님의 계산 요청을 위한 나눗셈 함수"""
     return a / b
 
-# Equip the butler with tools
 tools = [
     divide,
     extract_text
@@ -121,148 +99,138 @@ llm = ChatOpenAI(model="gpt-4o")
 llm_with_tools = llm.bind_tools(tools, parallel_tool_calls=False)
 ```
 
-## The nodes
+## 노드 정의
 
 ```python
 def assistant(state: AgentState):
-    # System message
+    # 시스템 메시지
     textual_description_of_tool="""
 extract_text(img_path: str) -> str:
-    Extract text from an image file using a multimodal model.
-
+    멀티모달 모델로 이미지 파일에서 텍스트 추출
     Args:
-        img_path: A local image file path (strings).
-
+        img_path: 로컬 이미지 파일 경로(문자열)
     Returns:
-        A single string containing the concatenated text extracted from each image.
+        각 이미지에서 추출된 텍스트를 합친 문자열
+
 divide(a: int, b: int) -> float:
-    Divide a and b
+    a를 b로 나눔
 """
     image=state["input_file"]
-    sys_msg = SystemMessage(content=f"You are a helpful butler named Alfred that serves Mr. Wayne and Batman. You can analyse documents and run computations with provided tools:\n{textual_description_of_tool} \n You have access to some optional images. Currently the loaded image is: {image}")
-
+    sys_msg = SystemMessage(content=f"당신은 Mr. Wayne과 배트맨을 섬기는 친절한 집사 알프레드입니다. 아래 툴로 문서를 분석하고 계산을 수행할 수 있습니다:\n{textual_description_of_tool} \n 현재 로드된 이미지는: {image}")
     return {
         "messages": [llm_with_tools.invoke([sys_msg] + state["messages"])],
         "input_file": state["input_file"]
     }
 ```
 
-## The ReAct Pattern: How I Assist Mr. Wayne
+## ReAct 패턴: 집사의 지원 방식
 
-Allow me to explain the approach in this agent. The agent follows what's known as the ReAct pattern (Reason-Act-Observe)
+이 에이전트는 ReAct 패턴(Reason-Act-Observe)을 따릅니다.
 
-1. **Reason** about his documents and requests
-2. **Act** by using appropriate tools
-3. **Observe** the results
-4. **Repeat** as necessary until I've fully addressed his needs
+1. 문서와 요청을 **이해(Reason)**
+2. 적절한 툴을 **실행(Act)**
+3. 결과를 **관찰(Observe)**
+4. 필요시 반복
 
-This is a simple implementation of an agent using LangGraph.
+아주 간단한 LangGraph 에이전트 구현 예시입니다.
 
 ```python
-# The graph
+# 그래프 생성
 builder = StateGraph(AgentState)
 
-# Define nodes: these do the work
+# 노드 정의
 builder.add_node("assistant", assistant)
 builder.add_node("tools", ToolNode(tools))
 
-# Define edges: these determine how the control flow moves
+# 엣지 정의
 builder.add_edge(START, "assistant")
 builder.add_conditional_edges(
     "assistant",
-    # If the latest message requires a tool, route to tools
-    # Otherwise, provide a direct response
     tools_condition,
 )
 builder.add_edge("tools", "assistant")
 react_graph = builder.compile()
 
-# Show the butler's thought process
+# 집사의 사고 과정을 시각화
 display(Image(react_graph.get_graph(xray=True).draw_mermaid_png()))
 ```
 
-We define a `tools` node with our list of tools. The `assistant` node is just our model with bound tools.
-We create a graph with `assistant` and `tools` nodes.
+`tools` 노드는 툴 리스트를, `assistant` 노드는 툴이 바인딩된 모델을 의미합니다.
 
-We add a `tools_condition` edge, which routes to `End` or to `tools` based on whether the `assistant` calls a tool.
+`tools_condition` 엣지는 모델이 툴을 호출하면 tools로, 아니면 End로 흐름을 보냅니다.
 
-Now, we add one new step:
+이제 한 단계 더 추가합니다:
+- `tools` 노드를 다시 `assistant`로 연결해 루프를 만듭니다.
+- `assistant` 실행 후, `tools_condition`이 툴 호출 여부를 판단해 분기합니다.
+- 툴 호출이면 `tools`로, 아니면 END로 종료합니다.
 
-We connect the `tools` node back to the `assistant`, forming a loop.
+![ReAct 패턴](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/LangGraph/Agent.png)
 
-- After the `assistant` node executes, `tools_condition` checks if the model's output is a tool call.
-- If it is a tool call, the flow is directed to the `tools` node.
-- The `tools` node connects back to `assistant`.
-- This loop continues as long as the model decides to call tools.
-- If the model response is not a tool call, the flow is directed to END, terminating the process.
+## 집사의 실제 활용 예시
 
-![ReAct Pattern](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/LangGraph/Agent.png)
+### 예시 1: 간단한 계산
 
-## The Butler in Action
-
-### Example 1: Simple Calculations
-
-Here is an example to show a simple use case of an agent using a tool in LangGraph.
+아래는 LangGraph에서 툴을 사용하는 간단한 예시입니다.
 
 ```python
-messages = [HumanMessage(content="Divide 6790 by 5")]
+messages = [HumanMessage(content="6790을 5로 나눠줘")]
 messages = react_graph.invoke({"messages": messages, "input_file": None})
 
-# Show the messages
+# 메시지 출력
 for m in messages['messages']:
     m.pretty_print()
 ```
 
-The conversation would proceed:
+대화 예시:
 
 ```
-Human: Divide 6790 by 5
+Human: 6790을 5로 나눠줘
 
 AI Tool Call: divide(a=6790, b=5)
 
 Tool Response: 1358.0
 
-Alfred: The result of dividing 6790 by 5 is 1358.0.
+Alfred: 6790을 5로 나누면 1358.0입니다.
 ```
 
-### Example 2: Analyzing Master Wayne's Training Documents
+### 예시 2: Wayne 주인님의 훈련 문서 분석
 
-When Master Wayne leaves his training and meal notes:
+주인님이 훈련 및 식단 쪽지를 남겼을 때:
 
 ```python
-messages = [HumanMessage(content="According to the note provided by Mr. Wayne in the provided images. What's the list of items I should buy for the dinner menu?")]
+messages = [HumanMessage(content="제공된 이미지에 있는 Wayne 주인님의 쪽지에 따라 저녁 메뉴에 필요한 재료 목록을 알려줘.")]
 messages = react_graph.invoke({"messages": messages, "input_file": "Batman_training_and_meals.png"})
 ```
 
-The interaction would proceed:
+대화 예시:
 
 ```
-Human: According to the note provided by Mr. Wayne in the provided images. What's the list of items I should buy for the dinner menu?
+Human: 제공된 이미지에 있는 Wayne 주인님의 쪽지에 따라 저녁 메뉴에 필요한 재료 목록을 알려줘.
 
 AI Tool Call: extract_text(img_path="Batman_training_and_meals.png")
 
-Tool Response: [Extracted text with training schedule and menu details]
+Tool Response: [훈련 일정 및 메뉴 세부 정보가 추출됨]
 
-Alfred: For the dinner menu, you should buy the following items:
+Alfred: 저녁 메뉴를 위해 다음 재료를 구입하세요:
 
-1. Grass-fed local sirloin steak
-2. Organic spinach
-3. Piquillo peppers
-4. Potatoes (for oven-baked golden herb potato)
-5. Fish oil (2 grams)
+1. 목초 사육 소고기 등심 스테이크
+2. 유기농 시금치
+3. 피키요 고추
+4. 감자(오븐에 구울 허브 감자용)
+5. 피쉬 오일(2그램)
 
-Ensure the steak is grass-fed and the spinach and peppers are organic for the best quality meal.
+스테이크는 목초 사육, 시금치와 고추는 유기농으로 준비하면 최고의 식사가 됩니다.
 ```
 
-## Key Takeaways
+## 핵심 요약
 
-Should you wish to create your own document analysis butler, here are key considerations:
+나만의 문서 분석 집사를 만들고 싶다면 다음을 고려하세요:
 
-1. **Define clear tools** for specific document-related tasks
-2. **Create a robust state tracker** to maintain context between tool calls
-3. **Consider error handling** for tool failures
-4. **Maintain contextual awareness** of previous interactions (ensured by the operator `add_messages`)
+1. **문서 관련 작업별로 명확한 툴 정의**
+2. **툴 호출 간 맥락 유지를 위한 견고한 상태 추적기**
+3. **툴 실패 시 오류 처리 고려**
+4. **이전 상호작용 맥락 유지(add_messages 연산자 활용)**
 
-With these principles, you too can provide exemplary document analysis service worthy of Wayne Manor.
+이 원칙을 따르면 Wayne 저택에 어울리는 문서 분석 서비스를 제공할 수 있습니다.
 
-*I trust this explanation has been satisfactory. Now, if you'll excuse me, Master Wayne's cape requires pressing before tonight's activities.*
+*이 설명이 도움이 되었길 바랍니다. 이제 주인님의 망토를 다림질하러 가보겠습니다.*

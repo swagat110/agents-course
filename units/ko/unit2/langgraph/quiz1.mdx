@@ -1,44 +1,44 @@
-# Test Your Understanding of LangGraph
+# LangGraph 이해도 테스트
 
-Let's test your understanding of `LangGraph` with a quick quiz! This will help reinforce the key concepts we've covered so far.
+`LangGraph`에 대한 이해도를 간단한 퀴즈로 테스트해보겠습니다! 지금까지 다룬 핵심 개념들을 강화하는 데 도움이 될 것입니다.
 
-This is an optional quiz and it's not graded.
+이 퀴즈는 선택사항이며 점수는 매기지 않습니다.
 
-### Q1: What is the primary purpose of LangGraph?
-Which statement best describes what LangGraph is designed for?
+### Q1: LangGraph의 주요 목적은 무엇인가요?
+LangGraph가 무엇을 위해 설계되었는지 가장 잘 설명하는 문장은?
 
 <Question
 choices={[
   {
-    text: "A framework to build control flows for applications containing LLMs",
-    explain: "LangGraph is specifically designed to help build and manage the control flow of applications that use LLMs.",
+    text: "LLM을 포함한 어플리케이션의 제어 흐름을 구축하기 위한 프레임워크",
+    explain: "LangGraph는 LLM을 사용하는 어플리케이션의 제어 흐름을 구축하고 관리하는 데 특별히 설계되었습니다.",
     correct: true
   },
   {
-    text: "A library that provides interfaces to interact with different LLM models",
-    explain: "This better describes LangChain's role, which provides standard interfaces for model interaction. LangGraph focuses on control flow.",
+    text: "다양한 LLM 모델과 상호작용하기 위한 인터페이스를 제공하는 라이브러리",
+    explain: "이는 LangChain의 역할을 더 잘 설명합니다. LangChain은 모델 상호작용을 위한 표준 인터페이스를 제공하고, LangGraph는 제어 흐름에 집중합니다.",
   },
   {
-    text: "An Agent library for tool calling",
-    explain: "While LangGraph works with agents, the main purpose of langGraph is 'Ochestration'.",
+    text: "툴 호출을 위한 에이전트 라이브러리",
+    explain: "LangGraph는 에이전트와 함께 작동하지만, LangGraph의 주요 목적은 '오케스트레이션'입니다.",
   }
 ]}
 />
 
 ---
 
-### Q2: In the context of the "Control vs Freedom" trade-off, where does LangGraph stand?
-Which statement best characterizes LangGraph's approach to agent design?
+### Q2: "제어 vs 자유" 트레이드오프 맥락에서 LangGraph는 어디에 위치하나요?
+에이전트 설계에 대한 LangGraph의 접근 방식을 가장 잘 특징짓는 문장은?
 
 <Question
 choices={[
   {
-    text: "LangGraph maximizes freedom, allowing LLMs to make all decisions independently",
-    explain: "LangGraph actually focuses more on control than freedom, providing structure for LLM workflows.",
+    text: "LangGraph는 자유를 극대화하여 LLM이 모든 결정을 독립적으로 내리도록 허용합니다",
+    explain: "LangGraph는 실제로 자유보다는 제어에 더 집중하며, LLM 워크플로우를 위한 구조를 제공합니다.",
   },
   {
-    text: "LangGraph provides strong control over execution flow while still leveraging LLM capabilities for decision making",
-    explain: "LangGraph shines when you need control over your agent's execution, providing predictable behavior through structured workflows.",
+    text: "LangGraph는 실행 흐름에 대한 강력한 제어를 제공하면서도 의사결정을 위한 LLM 기능을 활용합니다",
+    explain: "LangGraph는 에이전트의 실행에 대한 제어가 필요할 때 빛나며, 구조화된 워크플로우를 통해 예측 가능한 동작을 제공합니다.",
     correct: true
   },
 ]}
@@ -46,73 +46,73 @@ choices={[
 
 ---
 
-### Q3: What role does State play in LangGraph?
-Choose the most accurate description of State in LangGraph.
+### Q3: LangGraph에서 상태(State)의 역할은 무엇인가요?
+LangGraph에서 상태의 가장 정확한 설명을 선택하세요.
 
 <Question
 choices={[
   {
-    text: "State is the latest generation from the LLM",
-    explain: "State is a user-defined class in LangGraph, not LLM generated. It's fields are user defined, the values can be LLM filled",
+    text: "상태는 LLM의 최신 생성 결과입니다",
+    explain: "상태는 LangGraph에서 사용자가 정의한 클래스이며, LLM이 생성한 것이 아닙니다. 필드는 사용자가 정의하고, 값은 LLM이 채울 수 있습니다",
   },
   {
-    text: "State is only used to track errors during execution",
-    explain: "State has a much broader purpose than just error tracking. But that's still usefull.",
+    text: "상태는 실행 중 오류를 추적하는 데만 사용됩니다",
+    explain: "상태는 오류 추적보다 훨씬 광범위한 목적을 가지고 있습니다. 하지만 그것도 여전히 유용합니다.",
   },
   {
-    text: "State represents the information that flows through your agent application",
-    explain: "State is central to LangGraph and contains all the information needed for decision-making between steps. You provide the fields than you need to compute and the nodes can alter the values to decide on a branching.",
+    text: "상태는 에이전트 어플리케이션을 통해 흐르는 정보를 나타냅니다",
+    explain: "상태는 LangGraph의 핵심이며, 단계 간 의사결정에 필요한 모든 정보를 포함합니다. 필요한 필드를 제공하면 노드가 값을 변경하여 분기를 결정할 수 있습니다.",
     correct: true
   },
   {
-    text: "State is only relevant when working with external APIs",
-    explain: "State is fundamental to all LangGraph applications, not just those working with external APIs.",
+    text: "상태는 외부 API와 작업할 때만 관련이 있습니다",
+    explain: "상태는 외부 API와 작업하는 어플리케이션뿐만 아니라 모든 LangGraph 어플리케이션의 기본입니다.",
   }
 ]}
 />
 
-### Q4: What is a Conditional Edge in LangGraph?
-Select the most accurate description.
+### Q4: LangGraph에서 조건부 엣지(Conditional Edge)란 무엇인가요?
+가장 정확한 설명을 선택하세요.
 
 <Question
 choices={[
     {
-    text: "An edge that determines which node to execute next based on evaluating a condition",
-    explain: "Conditional edges allow your graph to make dynamic routing decisions based on the current state, creating branching logic in your workflow.",
+    text: "조건을 평가하여 다음에 실행할 노드를 결정하는 엣지",
+    explain: "조건부 엣지는 현재 상태를 기반으로 그래프가 동적 라우팅 결정을 내릴 수 있게 하여 워크플로우에 분기 로직을 만듭니다.",
     correct: true
   },
   {
-    text: "An edge that is only followed when a specific condition occurs",
-    explain: "Conditional edges control the flow of the application on it's outputs, not on the input.",
+    text: "특정 조건이 발생할 때만 따라가는 엣지",
+    explain: "조건부 엣지는 어플리케이션의 출력에 따라 흐름을 제어하며, 입력에 따라 제어하지는 않습니다.",
   },
   {
-    text: "An edge that requires user confirmation before proceeding",
-    explain: "Conditional edges are based on programmatic conditions, not user interaction requirements.",
+    text: "진행하기 전에 사용자 확인이 필요한 엣지",
+    explain: "조건부 엣지는 프로그래밍 조건에 기반하며, 사용자 상호작용 요구사항이 아닙니다.",
   }
 ]}
 />
 
 ---
 
-### Q5: How does LangGraph help address the hallucination problem in LLMs?
-Choose the best answer.
+### Q5: LangGraph는 LLM의 환각(hallucination) 문제를 어떻게 해결하는 데 도움이 되나요?
+최선의 답을 선택하세요.
 
 <Question
 choices={[
   {
-    text: "LangGraph eliminates hallucinations entirely by limiting LLM responses",
-    explain: "No framework can completely eliminate hallucinations from LLMs, LangGraph is no exception.",
+    text: "LangGraph는 LLM 응답을 제한하여 환각을 완전히 제거합니다",
+    explain: "어떤 프레임워크도 LLM의 환각을 완전히 제거할 수 없으며, LangGraph도 예외는 아닙니다.",
   },
   {
-    text: "LangGraph provides structured workflows that can validate and verify LLM outputs",
-    explain: "By creating structured workflows with validation steps, verification nodes, and error handling paths, LangGraph helps reduce the impact of hallucinations.",
+    text: "LangGraph는 LLM 출력을 검증하고 확인할 수 있는 구조화된 워크플로우를 제공합니다",
+    explain: "검증 단계, 확인 노드, 오류 처리 경로가 있는 구조화된 워크플로우를 만들어 LangGraph는 환각의 영향을 줄이는 데 도움이 됩니다.",
     correct: true
   },
   {
-    text: "LangGraph has no effect on hallucinations",
-    explain: "LangGraph's structured approach to workflows can help significantly in mitigating hallucinations at the cost of speed.",
+    text: "LangGraph는 환각에 영향을 주지 않습니다",
+    explain: "LangGraph의 구조화된 접근 방식은 속도를 희생하더라도 환각 완화에 상당한 도움을 줄 수 있습니다.",
   }
 ]}
 />
 
-Congratulations on completing the quiz! 🎉 If you missed any questions, consider reviewing the previous sections to strengthen your understanding. Next, we'll explore more advanced features of LangGraph and see how to build more complex agent workflows.
+퀴즈 완료를 축하합니다! 🎉 질문을 놓쳤다면, 이해를 강화하기 위해 이전 섹션들을 다시 검토해보세요. 다음에는 LangGraph의 더 고급 기능을 탐구하고 더 복잡한 에이전트 워크플로우를 구축하는 방법을 살펴보겠습니다.
