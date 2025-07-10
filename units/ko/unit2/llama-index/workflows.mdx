@@ -1,43 +1,43 @@
-# Creating agentic workflows in LlamaIndex
+# LlamaIndex에서 에이전트 워크플로우 만들기
 
-A workflow in LlamaIndex provides a structured way to organize your code into sequential and manageable steps.
+LlamaIndex의 워크플로우는 코드를 순차적이고 관리 가능한 단계로 구성하는 구조화된 방법을 제공합니다.
 
-Such a workflow is created by defining `Steps` which are triggered by `Events`, and themselves emit `Events` to trigger further steps.
-Let's take a look at Alfred showing a LlamaIndex workflow for a RAG task.
+이러한 워크플로우는 `Events`에 의해 트리거되는 `Steps`를 정의하여 생성되며, 이들 자체가 추가 단계를 트리거하기 위해 `Events`를 발생시킵니다.
+RAG 작업을 위한 LlamaIndex 워크플로우를 보여주는 알프레드를 살펴보겠습니다.
 
-![Workflow Schematic](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/workflows.png)
+![워크플로우 개요](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/workflows.png)
 
-**Workflows offer several key benefits:**
+**워크플로우는 몇 가지 주요 이점을 제공합니다:**
 
-- Clear organization of code into discrete steps
-- Event-driven architecture for flexible control flow
-- Type-safe communication between steps
-- Built-in state management
-- Support for both simple and complex agent interactions
+- 코드를 개별 단계로 명확하게 구성
+- 유연한 제어 흐름을 위한 이벤트 기반 아키텍처
+- 단계 간 타입 안전 통신
+- 내장 상태 관리
+- 간단하고 복잡한 에이전트 상호작용 모두 지원
 
-As you might have guessed, **workflows strike a great balance between the autonomy of agents while maintaining control over the overall workflow.**
+추측하셨을 수 있듯이, **워크플로우는 전체 워크플로우에 대한 제어를 유지하면서 에이전트의 자율성 사이에서 훌륭한 균형을 제공합니다.**
 
-So, let's learn how to create a workflow ourselves!
+그럼 우리만의 워크플로우를 만드는 방법을 배워보겠습니다!
 
-## Creating Workflows
+## 워크플로우 만들기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/llama-index/workflows.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+<a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/llama-index/workflows.ipynb" target="_blank">이 노트북</a>을 따라가며 Google Colab에서 코드를 실행해볼 수 있습니다.
 </Tip>
 
-### Basic Workflow Creation
+### 기본 워크플로우 생성
 
 <details>
-<summary>Install the Workflow package</summary>
-As introduced in the <a href="./llama-hub">section on the LlamaHub</a>, we can install the Workflow package with the following command:
+<summary>워크플로우 패키지 설치</summary>
+<a href="./llama-hub">LlamaHub 섹션</a>에서 소개된 대로, 다음 명령어로 워크플로우 패키지를 설치할 수 있습니다:
 
 ```python
 pip install llama-index-utils-workflow
 ```
 </details>
 
-We can create a single-step workflow by defining a class that inherits from `Workflow` and decorating your functions with `@step`.
-We will also need to add `StartEvent` and `StopEvent`, which are special events that are used to indicate the start and end of the workflow.
+`Workflow`를 상속하는 클래스를 정의하고 함수에 `@step` 데코레이터를 사용하여 단일 단계 워크플로우를 만들 수 있습니다.
+또한 워크플로우의 시작과 끝을 나타내는 특별한 이벤트인 `StartEvent`와 `StopEvent`를 추가해야 합니다.
 
 ```python
 from llama_index.core.workflow import StartEvent, StopEvent, Workflow, step
@@ -45,20 +45,20 @@ from llama_index.core.workflow import StartEvent, StopEvent, Workflow, step
 class MyWorkflow(Workflow):
     @step
     async def my_step(self, ev: StartEvent) -> StopEvent:
-        # do something here
-        return StopEvent(result="Hello, world!")
+        # 여기서 무언가 수행
+        return StopEvent(result="안녕하세요, 세계!")
 
 
 w = MyWorkflow(timeout=10, verbose=False)
 result = await w.run()
 ```
 
-As you can see, we can now run the workflow by calling `w.run()`.
+보시다시피, 이제 `w.run()`을 호출하여 워크플로우를 실행할 수 있습니다.
 
-### Connecting Multiple Steps
+### 여러 단계 연결하기
 
-To connect multiple steps, we **create custom events that carry data between steps.**
-To do so, we need to add an `Event` that is passed between the steps and transfers the output of the first step to the second step.
+여러 단계를 연결하기 위해 **단계 간에 데이터를 전달하는 사용자 정의 이벤트를 만듭니다.**
+이를 위해 단계 간에 전달되고 첫 번째 단계의 출력을 두 번째 단계로 전송하는 `Event`를 추가해야 합니다.
 
 ```python
 from llama_index.core.workflow import Event
@@ -69,13 +69,13 @@ class ProcessingEvent(Event):
 class MultiStepWorkflow(Workflow):
     @step
     async def step_one(self, ev: StartEvent) -> ProcessingEvent:
-        # Process initial data
-        return ProcessingEvent(intermediate_result="Step 1 complete")
+        # 초기 데이터 처리
+        return ProcessingEvent(intermediate_result="1단계 완료")
 
     @step
     async def step_two(self, ev: ProcessingEvent) -> StopEvent:
-        # Use the intermediate result
-        final_result = f"Finished processing: {ev.intermediate_result}"
+        # 중간 결과 사용
+        final_result = f"처리 완료: {ev.intermediate_result}"
         return StopEvent(result=final_result)
 
 w = MultiStepWorkflow(timeout=10, verbose=False)
@@ -83,14 +83,14 @@ result = await w.run()
 result
 ```
 
-The type hinting is important here, as it ensures that the workflow is executed correctly. Let's complicate things a bit more!
+타입 힌팅은 워크플로우가 올바르게 실행되도록 보장하므로 여기서 중요합니다. 조금 더 복잡하게 만들어보겠습니다!
 
-### Loops and Branches
+### 루프와 분기
 
-The type hinting is the most powerful part of workflows because it allows us to create branches, loops, and joins to facilitate more complex workflows.
+타입 힌팅은 워크플로우의 가장 강력한 부분입니다. 더 복잡한 워크플로우를 용이하게 하기 위해 분기, 루프, 조인을 만들 수 있게 해주기 때문입니다.
 
-Let's show an example of **creating a loop** by using the union operator `|`.
-In the example below, we see that the `LoopEvent` is taken as input for the step and can also be returned as output.
+합집합 연산자 `|`를 사용하여 **루프를 만드는** 예제를 보여드리겠습니다.
+아래 예제에서 `LoopEvent`가 단계의 입력으로 사용되고 출력으로도 반환될 수 있음을 볼 수 있습니다.
 
 ```python
 from llama_index.core.workflow import Event
@@ -109,16 +109,16 @@ class MultiStepWorkflow(Workflow):
     @step
     async def step_one(self, ev: StartEvent | LoopEvent) -> ProcessingEvent | LoopEvent:
         if random.randint(0, 1) == 0:
-            print("Bad thing happened")
-            return LoopEvent(loop_output="Back to step one.")
+            print("나쁜 일이 발생했습니다")
+            return LoopEvent(loop_output="1단계로 돌아갑니다.")
         else:
-            print("Good thing happened")
-            return ProcessingEvent(intermediate_result="First step complete.")
+            print("좋은 일이 발생했습니다")
+            return ProcessingEvent(intermediate_result="첫 번째 단계 완료.")
 
     @step
     async def step_two(self, ev: ProcessingEvent) -> StopEvent:
-        # Use the intermediate result
-        final_result = f"Finished processing: {ev.intermediate_result}"
+        # 중간 결과 사용
+        final_result = f"처리 완료: {ev.intermediate_result}"
         return StopEvent(result=final_result)
 
 
@@ -127,25 +127,25 @@ result = await w.run()
 result
 ```
 
-### Drawing Workflows
+### 워크플로우 그리기
 
-We can also draw workflows. Let's use the `draw_all_possible_flows` function to draw the workflow. This stores the workflow in an HTML file.
+워크플로우를 그릴 수도 있습니다. `draw_all_possible_flows` 함수를 사용하여 워크플로우를 그려보겠습니다. 이는 워크플로우를 HTML 파일에 저장합니다.
 
 ```python
 from llama_index.utils.workflow import draw_all_possible_flows
 
-w = ... # as defined in the previous section
+w = ... # 이전 섹션에서 정의된 대로
 draw_all_possible_flows(w, "flow.html")
 ```
 
-![workflow drawing](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/workflow-draw.png)
+![워크플로우 그리기](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/workflow-draw.png)
 
-There is one last cool trick that we will cover in the course, which is the ability to add state to the workflow.
+강의에서 다룰 마지막 멋진 트릭이 있는데, 그것은 워크플로우에 상태를 추가하는 능력입니다.
 
-### State Management
+### 상태 관리
 
-State management is useful when you want to keep track of the state of the workflow, so that every step has access to the same state.
-We can do this by using the `Context` type hint on top of a parameter in the step function.
+상태 관리는 워크플로우의 상태를 추적하고 싶을 때 유용하므로, 모든 단계가 동일한 상태에 접근할 수 있습니다.
+단계 함수의 매개변수 위에 `Context` 타입 힌팅을 사용하여 이를 수행할 수 있습니다.
 
 ```python
 from llama_index.core.workflow import Context, StartEvent, StopEvent
@@ -153,95 +153,95 @@ from llama_index.core.workflow import Context, StartEvent, StopEvent
 
 @step
 async def query(self, ctx: Context, ev: StartEvent) -> StopEvent:
-    # store query in the context
-    await ctx.store.set("query", "What is the capital of France?")
+    # 컨텍스트에 쿼리 저장
+    await ctx.store.set("query", "프랑스의 수도는 무엇인가요?")
 
-    # do something with context and event
+    # 컨텍스트와 이벤트로 무언가 수행
     val = ...
 
-    # retrieve query from the context
+    # 컨텍스트에서 쿼리 검색
     query = await ctx.store.get("query")
 
     return StopEvent(result=val)
 ```
 
-Great! Now you know how to create basic workflows in LlamaIndex!
+훌륭합니다! 이제 LlamaIndex에서 기본 워크플로우를 만드는 방법을 알게 되었습니다!
 
-<Tip>There are some more complex nuances to workflows, which you can learn about in <a href="https://docs.llamaindex.ai/en/stable/understanding/workflows/">the LlamaIndex documentation</a>.</Tip>
+<Tip>워크플로우에는 더 복잡한 뉘앙스가 있으며, <a href="https://docs.llamaindex.ai/en/stable/understanding/workflows/">LlamaIndex 문서</a>에서 배울 수 있습니다.</Tip>
 
-However, there is another way to create workflows, which relies on the `AgentWorkflow` class. Let's take a look at how we can use this to create a multi-agent workflow.
+하지만 `AgentWorkflow` 클래스에 의존하는 워크플로우를 만드는 다른 방법이 있습니다. 이를 사용하여 다중 에이전트 워크플로우를 만드는 방법을 살펴보겠습니다.
 
-## Automating workflows with Multi-Agent Workflows
+## 다중 에이전트 워크플로우로 워크플로우 자동화
 
-Instead of manual workflow creation, we can use the **`AgentWorkflow` class to create a multi-agent workflow**.
-The `AgentWorkflow` uses Workflow Agents to allow you to create a system of one or more agents that can collaborate and hand off tasks to each other based on their specialized capabilities.
-This enables building complex agent systems where different agents handle different aspects of a task.
-Instead of importing classes from `llama_index.core.agent`, we will import the agent classes from `llama_index.core.agent.workflow`.
-One agent must be designated as the root agent in the `AgentWorkflow` constructor.
-When a user message comes in, it is first routed to the root agent.
+수동 워크플로우 생성 대신 **`AgentWorkflow` 클래스를 사용하여 다중 에이전트 워크플로우를 만들** 수 있습니다.
+`AgentWorkflow`는 워크플로우 에이전트를 사용하여 전문화된 기능을 기반으로 협업하고 서로에게 작업을 넘길 수 있는 하나 이상의 에이전트 시스템을 만들 수 있게 해줍니다.
+이를 통해 서로 다른 에이전트가 작업의 서로 다른 측면을 처리하는 복잡한 에이전트 시스템을 구축할 수 있습니다.
+`llama_index.core.agent`에서 클래스를 가져오는 대신, `llama_index.core.agent.workflow`에서 에이전트 클래스를 가져올 것입니다.
+하나의 에이전트는 `AgentWorkflow` 생성자에서 루트 에이전트로 지정되어야 합니다.
+사용자 메시지가 들어오면 먼저 루트 에이전트로 라우팅됩니다.
 
-Each agent can then:
+각 에이전트는 다음을 수행할 수 있습니다:
 
-- Handle the request directly using their tools
-- Handoff to another agent better suited for the task
-- Return a response to the user
+- 툴을 사용하여 요청을 직접 처리
+- 작업에 더 적합한 다른 에이전트에게 작업 넘기기
+- 사용자에게 응답 반환
 
-Let's see how to create a multi-agent workflow.
+다중 에이전트 워크플로우를 만드는 방법을 살펴보겠습니다.
 
 ```python
 from llama_index.core.agent.workflow import AgentWorkflow, ReActAgent
 from llama_index.llms.huggingface_api import HuggingFaceInferenceAPI
 
-# Define some tools
+# 몇 가지 툴 정의
 def add(a: int, b: int) -> int:
-    """Add two numbers."""
+    """두 숫자를 더합니다."""
     return a + b
 
 def multiply(a: int, b: int) -> int:
-    """Multiply two numbers."""
+    """두 숫자를 곱합니다."""
     return a * b
 
 llm = HuggingFaceInferenceAPI(model_name="Qwen/Qwen2.5-Coder-32B-Instruct")
 
-# we can pass functions directly without FunctionTool -- the fn/docstring are parsed for the name/description
+# FunctionTool 없이 함수를 직접 전달할 수 있습니다 -- 함수/독스트링이 이름/설명을 위해 파싱됩니다
 multiply_agent = ReActAgent(
     name="multiply_agent",
-    description="Is able to multiply two integers",
-    system_prompt="A helpful assistant that can use a tool to multiply numbers.",
+    description="두 정수를 곱할 수 있습니다",
+    system_prompt="숫자를 곱하는 툴을 사용할 수 있는 도움이 되는 어시스턴트입니다.",
     tools=[multiply],
     llm=llm,
 )
 
 addition_agent = ReActAgent(
     name="add_agent",
-    description="Is able to add two integers",
-    system_prompt="A helpful assistant that can use a tool to add numbers.",
+    description="두 정수를 더할 수 있습니다",
+    system_prompt="숫자를 더하는 툴을 사용할 수 있는 도움이 되는 어시스턴트입니다.",
     tools=[add],
     llm=llm,
 )
 
-# Create the workflow
+# 워크플로우 생성
 workflow = AgentWorkflow(
     agents=[multiply_agent, addition_agent],
     root_agent="multiply_agent",
 )
 
-# Run the system
-response = await workflow.run(user_msg="Can you add 5 and 3?")
+# 시스템 실행
+response = await workflow.run(user_msg="5와 3을 더할 수 있나요?")
 ```
 
-Agent tools can also modify the workflow state we mentioned earlier. Before starting the workflow, we can provide an initial state dict that will be available to all agents.
-The state is stored in the state key of the workflow context. It will be injected into the state_prompt which augments each new user message.
+에이전트 툴은 앞서 언급한 워크플로우 상태도 수정할 수 있습니다. 워크플로우를 시작하기 전에 모든 에이전트가 사용할 수 있는 초기 상태 딕셔너리를 제공할 수 있습니다.
+상태는 워크플로우 컨텍스트의 상태 키에 저장됩니다. 각 새로운 사용자 메시지를 보강하는 state_prompt에 주입됩니다.
 
-Let's inject a counter to count function calls by modifying the previous example:
+이전 예제를 수정하여 함수 호출을 세는 카운터를 주입해보겠습니다:
 
 ```python
 from llama_index.core.workflow import Context
 
-# Define some tools
+# 몇 가지 툴 정의
 async def add(ctx: Context, a: int, b: int) -> int:
-    """Add two numbers."""
-    # update our count
+    """두 숫자를 더합니다."""
+    # 카운트 업데이트
     cur_state = await ctx.store.get("state")
     cur_state["num_fn_calls"] += 1
     await ctx.store.set("state", cur_state)
@@ -249,8 +249,8 @@ async def add(ctx: Context, a: int, b: int) -> int:
     return a + b
 
 async def multiply(ctx: Context, a: int, b: int) -> int:
-    """Multiply two numbers."""
-    # update our count
+    """두 숫자를 곱합니다."""
+    # 카운트 업데이트
     cur_state = await ctx.store.get("state")
     cur_state["num_fn_calls"] += 1
     await ctx.store.set("state", cur_state)
@@ -263,18 +263,18 @@ workflow = AgentWorkflow(
     agents=[multiply_agent, addition_agent],
     root_agent="multiply_agent",
     initial_state={"num_fn_calls": 0},
-    state_prompt="Current state: {state}. User message: {msg}",
+    state_prompt="현재 상태: {state}. 사용자 메시지: {msg}",
 )
 
-# run the workflow with context
+# 컨텍스트와 함께 워크플로우 실행
 ctx = Context(workflow)
-response = await workflow.run(user_msg="Can you add 5 and 3?", ctx=ctx)
+response = await workflow.run(user_msg="5와 3을 더할 수 있나요?", ctx=ctx)
 
-# pull out and inspect the state
+# 상태를 꺼내서 검사
 state = await ctx.store.get("state")
 print(state["num_fn_calls"])
 ```
 
-Congratulations! You have now mastered the basics of Agents in LlamaIndex! 🎉
+축하합니다! 이제 LlamaIndex에서 에이전트의 기본을 마스터했습니다! 🎉
 
-Let's continue with one final quiz to solidify your knowledge! 🚀
+지식을 확고히 하기 위해 마지막 퀴즈를 계속해보겠습니다! 🚀

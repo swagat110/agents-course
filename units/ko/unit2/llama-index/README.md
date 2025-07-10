@@ -1,15 +1,15 @@
-# Table of Contents
+# 목차
 
-This LlamaIndex frame outline is part of unit 2 of the course. You can access the unit 2 about LlamaIndex on hf.co/learn 👉 <a href="https://hf.co/learn/agents-course/unit2/llama-index/introduction">here</a>
+이 LlamaIndex 프레임 개요는 강의 2단원의 일부입니다. hf.co/learn에서 LlamaIndex에 대한 2단원에 접근할 수 있습니다 👉 <a href="https://hf.co/learn/agents-course/unit2/llama-index/introduction">여기</a>
 
-| Title | Description |
+| 제목 | 설명 |
 | --- | --- |
-| [Introduction](introduction.mdx) | Introduction to LlamaIndex |
-| [LlamaHub](llama-hub.mdx) | LlamaHub: a registry of integrations, agents and tools |
-| [Components](components.mdx) | Components: the building blocks of workflows |
-| [Tools](tools.mdx) | Tools: how to build tools in LlamaIndex |
-| [Quiz 1](quiz1.mdx) | Quiz 1 |
-| [Agents](agents.mdx) | Agents: how to build agents in LlamaIndex |
-| [Workflows](workflows.mdx) | Workflows: a sequence of steps, events made of components that are executed in order |
-| [Quiz 2](quiz2.mdx) | Quiz 2 |
-| [Conclusion](conclusion.mdx) | Conclusion |
+| [소개](introduction.mdx) | LlamaIndex 소개 |
+| [LlamaHub](llama-hub.mdx) | LlamaHub: 통합, 에이전트, 툴의 레지스트리 |
+| [구성 요소](components.mdx) | 구성 요소: 워크플로우의 빌딩 블록 |
+| [툴](tools.mdx) | 툴: LlamaIndex에서 툴을 구축하는 방법 |
+| [퀴즈 1](quiz1.mdx) | 퀴즈 1 |
+| [에이전트](agents.mdx) | 에이전트: LlamaIndex에서 에이전트를 구축하는 방법 |
+| [워크플로우](workflows.mdx) | 워크플로우: 순서대로 실행되는 구성 요소로 만들어진 단계, 이벤트의 시퀀스 |
+| [퀴즈 2](quiz2.mdx) | 퀴즈 2 |
+| [결론](conclusion.mdx) | 결론 |

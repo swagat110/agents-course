@@ -1,42 +1,42 @@
-# Introduction to the LlamaHub
+# LlamaHub 소개
 
-**LlamaHub is a registry of hundreds of integrations, agents and tools that you can use within LlamaIndex.**
+**LlamaHub는 LlamaIndex 내에서 사용할 수 있는 수백 개의 통합, 에이전트, 툴의 레지스트리입니다.**
 
 ![LlamaHub](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/llama-hub.png)
 
-We will be using various integrations in this course, so let's first look at the LlamaHub and how it can help us.
+이 강의에서 다양한 통합을 사용할 것이므로, 먼저 LlamaHub와 그것이 어떻게 우리를 도울 수 있는지 살펴보겠습니다.
 
-Let's see how to find and install the dependencies for the components we need.
+필요한 구성 요소의 의존성을 찾고 설치하는 방법을 살펴보겠습니다.
 
-## Installation
+## 설치
 
-LlamaIndex installation instructions are available as a well-structured **overview on [LlamaHub](https://llamahub.ai/)**.
-This might be a bit overwhelming at first, but most of the **installation commands generally follow an easy-to-remember format**:
+LlamaIndex 설치 지침은 [LlamaHub](https://llamahub.ai/)에서 잘 구조화된 **개요로 제공**됩니다.
+처음에는 조금 압도적일 수 있지만, 대부분의 **설치 명령어는 일반적으로 기억하기 쉬운 형식**을 따릅니다:
 
 ```bash
 pip install llama-index-{component-type}-{framework-name}
 ```
 
-Let's try to install the dependencies for an LLM and embedding component using the [Hugging Face inference API integration](https://llamahub.ai/l/llms/llama-index-llms-huggingface-api?from=llms).
+[Hugging Face 추론 API 통합](https://llamahub.ai/l/llms/llama-index-llms-huggingface-api?from=llms)을 사용하여 LLM과 임베딩 구성 요소의 의존성을 설치해보겠습니다.
 
 ```bash
 pip install llama-index-llms-huggingface-api llama-index-embeddings-huggingface
 ```
 
-## Usage
+## 사용법
 
-Once installed, we can see the usage patterns. You'll notice that the import paths follow the install command!
-Underneath, we can see an example of the usage of **the Hugging Face inference API for an LLM component**.
+설치되면 사용 패턴을 볼 수 있습니다. 가져오기 경로가 설치 명령어를 따르는 것을 알 수 있을 것입니다!
+아래에서 **LLM 구성 요소를 위한 Hugging Face 추론 API 사용**의 예를 볼 수 있습니다.
 
 ```python
 from llama_index.llms.huggingface_api import HuggingFaceInferenceAPI
 import os
 from dotenv import load_dotenv
 
-# Load the .env file
+# .env 파일 로드
 load_dotenv()
 
-# Retrieve HF_TOKEN from the environment variables
+# 환경 변수에서 HF_TOKEN 검색
 hf_token = os.getenv("HF_TOKEN")
 
 llm = HuggingFaceInferenceAPI(
@@ -46,10 +46,10 @@ llm = HuggingFaceInferenceAPI(
     token=hf_token,
 )
 
-response = llm.complete("Hello, how are you?")
+response = llm.complete("안녕하세요, 어떻게 지내시나요?")
 print(response)
-# I am good, how can I help you today?
+# 잘 지내고 있습니다, 오늘 어떻게 도와드릴까요?
 ```
 
-Wonderful, we now know how to find, install and use the integrations for the components we need.
-**Let's dive deeper into the components** and see how we can use them to build our own agents.
+훌륭합니다, 이제 필요한 구성 요소의 통합을 찾고, 설치하고, 사용하는 방법을 알게 되었습니다.
+**구성 요소에 대해 더 깊이 들어가서** 우리만의 에이전트를 구축하는 데 어떻게 사용할 수 있는지 살펴보겠습니다.

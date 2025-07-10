@@ -1,80 +1,80 @@
-# Quick Self-Check (ungraded) [[quiz2]]
+# 셀프 체크 (채점되지 않음) [[quiz2]]
 
-What?! Another Quiz? We know, we know, ... 😅 But this short, ungraded quiz is here to **help you reinforce key concepts you've just learned**.
+뭐?! 또 다른 퀴즈? 알겠습니다, 알겠습니다... 😅 하지만 이 짧은, 채점되지 않는 퀴즈는 **방금 배운 핵심 개념을 강화하는 데 도움이** 되기 위해 여기 있습니다.
 
-This quiz covers agent workflows and interactions - essential components for building effective AI agents.
+이 퀴즈는 효과적인 AI 에이전트를 구축하기 위한 필수 구성 요소인 에이전트 워크플로우와 상호작용을 다룹니다.
 
-### Q1: What is the purpose of AgentWorkflow in LlamaIndex?
+### Q1: LlamaIndex에서 AgentWorkflow의 목적은 무엇인가요?
 
 <Question
 choices={[
 {
-text: "To run one or more agents with tools",
-explain: "Yes, the AgentWorkflow is the main way to quickly create a system with one or more agents.",
+text: "툴과 함께 하나 이상의 에이전트를 실행하기 위해",
+explain: "네, AgentWorkflow는 하나 이상의 에이전트로 시스템을 빠르게 만드는 주요 방법입니다.",
 correct: true
 },
 {
-text: "To create a single agent that can query your data without memory",
-explain: "No, the AgentWorkflow is more capable than that, the QueryEngine is for simple queries over your data.",
+text: "메모리 없이 데이터를 쿼리할 수 있는 단일 에이전트를 만들기 위해",
+explain: "아니요, AgentWorkflow는 그보다 더 능력이 있습니다. QueryEngine은 데이터에 대한 간단한 쿼리용입니다.",
 },
 {
-text: "To automatically build tools for agents",
-explain: "The AgentWorkflow does not build tools, that is the job of the developer.",
+text: "에이전트를 위한 툴을 자동으로 구축하기 위해",
+explain: "AgentWorkflow는 툴을 구축하지 않습니다. 그것은 개발자의 작업입니다.",
 },
 {
-text: "To manage agent memory and state",
-explain: "Managing memory and state is not the primary purpose of AgentWorkflow.",
+text: "에이전트 메모리와 상태를 관리하기 위해",
+explain: "메모리와 상태 관리는 AgentWorkflow의 주요 목적이 아닙니다.",
 }
 ]}
 />
 
 ---
 
-### Q2: What object is used for keeping track of the state of the workflow?
+### Q2: 워크플로우의 상태를 추적하는 데 사용되는 객체는 무엇인가요?
 
 <Question
 choices={[
 {
 text: "State",
-explain: "State is not the correct object for workflow state management.",
+explain: "State는 워크플로우 상태 관리에 올바른 객체가 아닙니다.",
 },
 {
 text: "Context",
-explain: "Context is the correct object used for keeping track of workflow state.",
+explain: "Context는 워크플로우 상태를 추적하는 데 사용되는 올바른 객체입니다.",
 correct: true
 },
 {
 text: "WorkflowState",
-explain: "WorkflowState is not the correct object.",
+explain: "WorkflowState는 올바른 객체가 아닙니다.",
 },
 {
 text: "Management",
-explain: "Management is not a valid object for workflow state.",
+explain: "Management는 워크플로우 상태에 대한 유효한 객체가 아닙니다.",
 }
 ]}
 />
 
 ---
 
-### Q3: Which method should be used if you want an agent to remember previous interactions?
+### Q3: 에이전트가 이전 상호작용을 기억하게 하려면 어떤 메서드를 사용해야 하나요?
 
 <Question
 choices={[
 {
 text: "run(query_str)",
-explain: ".run(query_str) does not maintain conversation history.",
+explain: ".run(query_str)는 대화 기록을 유지하지 않습니다.",
 },
 {
 text: "chat(query_str, ctx=ctx)",
-explain: "chat() is not a valid method on workflows.",
+explain: "chat()은 워크플로우에서 유효한 메서드가 아닙니다.",
 },
 {
 text: "interact(query_str)",
-explain: "interact() is not a valid method for agent interactions.",
+explain: "interact()은 에이전트 상호작용에 대한 유효한 메서드가 아닙니다.",
 },
 {
 text: "run(query_str, ctx=ctx)",
-explain: "By passing in and maintaining the context, we can maintain state!",
+explain: "맥락을 전달하고 유지함으로써 상태를 유지할 수 있습니다!",
 correct: true
 }
 ]}
@@ -82,26 +82,26 @@ correct: true
 
 ---
 
-### Q4: What is a key feature of Agentic RAG?
+### Q4: 에이전트 RAG의 주요 특징은 무엇인가요?
 
 <Question
 choices={[
 {
-text: "It can only use document-based tools, to answer questions in a RAG workflow",
-explain: "Agentic RAG can use different tools, including document-based tools.",
+text: "RAG 워크플로우에서 질문에 답하기 위해 문서 기반 툴만 사용할 수 있습니다",
+explain: "에이전트 RAG는 문서 기반 툴을 포함한 다양한 툴을 사용할 수 있습니다.",
 },
 {
-text: "It automatically answers questions without tools, like a chatbot",
-explain: "Agentic RAG does use tools to answer questions.",
+text: "챗봇처럼 툴 없이 자동으로 질문에 답합니다",
+explain: "에이전트 RAG는 질문에 답하기 위해 툴을 사용합니다.",
 },
 {
-text: "It can decide to use any tool to answer questions, including RAG tools",
-explain: "Agentic RAG has the flexibility to use different tools to answer questions.",
+text: "RAG 툴을 포함한 모든 툴을 사용하여 질문에 답할지 결정할 수 있습니다",
+explain: "에이전트 RAG는 질문에 답하기 위해 다양한 툴을 사용할 수 있는 유연성을 가집니다.",
 correct: true
 },
 {
-text: "It only works with Function Calling Agents",
-explain: "Agentic RAG is not limited to Function Calling Agents.",
+text: "Function Calling Agents와만 작동합니다",
+explain: "에이전트 RAG는 Function Calling Agents에만 국한되지 않습니다.",
 }
 ]}
 />
@@ -109,4 +109,4 @@ explain: "Agentic RAG is not limited to Function Calling Agents.",
 ---
 
 
-Got it? Great! Now let's **do a brief recap of the unit!**
+이해하셨나요? 훌륭합니다! 이제 **단원에 대한 간단한 요약을 해보겠습니다!**

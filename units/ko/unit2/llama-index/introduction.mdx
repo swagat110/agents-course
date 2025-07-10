@@ -1,30 +1,29 @@
-# Introduction to LlamaIndex
+# LlamaIndex 소개
 
-Welcome to this module, where you’ll learn how to build LLM-powered agents using the [LlamaIndex](https://www.llamaindex.ai/) toolkit.
+[LlamaIndex](https://www.llamaindex.ai/) 툴킷을 사용하여 LLM 기반 에이전트를 구축하는 방법을 배우는 이 모듈에 오신 것을 환영합니다.
 
-LlamaIndex is **a complete toolkit for creating LLM-powered agents over your data using indexes and workflows**. For this course we'll focus on three main parts that help build agents in LlamaIndex: **Components**, **Agents and Tools** and **Workflows**.
+LlamaIndex는 **인덱스와 워크플로우를 사용하여 데이터 위에서 LLM 기반 에이전트를 만드는 완전한 툴킷**입니다. 이 강의에서는 LlamaIndex에서 에이전트를 구축하는 데 도움이 되는 세 가지 주요 부분에 집중할 것입니다: **구성 요소**, **에이전트와 툴**, 그리고 **워크플로우**입니다.
 
 ![LlamaIndex](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/thumbnail.png)
 
-Let's look at these key parts of LlamaIndex and how they help with agents:
+LlamaIndex의 이러한 핵심 부분들과 에이전트에 어떻게 도움이 되는지 살펴보겠습니다:
 
-- **Components**: Are the basic building blocks you use in LlamaIndex. These include things like prompts, models, and databases. Components often help connect LlamaIndex with other tools and libraries.
-- **Tools**: Tools are components that provide specific capabilities like searching, calculating, or accessing external services. They are the building blocks that enable agents to perform tasks.
-- **Agents**: Agents are autonomous components that can use tools and make decisions. They coordinate tool usage to accomplish complex goals.
-- **Workflows**: Are step-by-step processes that process logic together. Workflows or agentic workflows are a way to structure agentic behaviour without the explicit use of agents.
+- **구성 요소**: LlamaIndex에서 사용하는 기본 빌딩 블록입니다. 프롬프트, 모델, 데이터베이스 등이 포함됩니다. 구성 요소는 종종 LlamaIndex를 다른 툴과 라이브러리와 연결하는 데 도움이 됩니다.
+- **툴**: 검색, 계산, 외부 서비스 접근과 같은 특정 기능을 제공하는 구성 요소입니다. 에이전트가 작업을 수행할 수 있게 하는 빌딩 블록입니다.
+- **에이전트**: 툴을 사용하고 결정을 내릴 수 있는 자율 구성 요소입니다. 복잡한 목표를 달성하기 위해 툴 사용을 조정합니다.
+- **워크플로우**: 로직을 함께 처리하는 단계별 프로세스입니다. 워크플로우 또는 에이전트 워크플로우는 명시적인 에이전트 사용 없이 에이전트 행동을 구조화하는 방법입니다.
 
+## LlamaIndex를 특별하게 만드는 것은 무엇인가요?
 
-## What Makes LlamaIndex Special?
+LlamaIndex가 smolagents와 같은 다른 프레임워크와 유사한 일부 작업을 수행하지만, 몇 가지 주요 이점이 있습니다:
 
-While LlamaIndex does some things similar to other frameworks like smolagents, it has some key benefits:
+- **명확한 워크플로우 시스템**: 워크플로우는 이벤트 기반 및 비동기 우선 구문을 사용하여 에이전트가 단계별로 어떻게 결정을 내려야 하는지 분해하는 데 도움이 됩니다. 이는 로직을 명확하게 구성하고 구성하는 데 도움이 됩니다.
+- **LlamaParse를 통한 고급 문서 파싱**: LlamaParse는 LlamaIndex를 위해 특별히 만들어졌으므로 통합이 원활하지만, 유료 기능입니다.
+- **많은 즉시 사용 가능한 구성 요소**: LlamaIndex는 오랫동안 존재해왔으므로 많은 다른 프레임워크와 함께 작동합니다. 이는 LLM, 검색기, 인덱스 등과 같은 많은 테스트되고 신뢰할 수 있는 구성 요소가 있음을 의미합니다.
+- **LlamaHub**: LlamaIndex 내에서 사용할 수 있는 이러한 구성 요소, 에이전트, 툴의 수백 개 레지스트리입니다.
 
-- **Clear Workflow System**: Workflows help break down how agents should make decisions step by step using an event-driven and async-first syntax. This helps you clearly compose and organize your logic.
-- **Advanced Document Parsing with LlamaParse**: LlamaParse was made specifically for LlamaIndex, so the integration is seamless, although it is a paid feature.
-- **Many Ready-to-Use Components**: LlamaIndex has been around for a while, so it works with lots of other frameworks. This means it has many tested and reliable components, like LLMs, retrievers, indexes, and more.
-- **LlamaHub**: is a registry of hundreds of these components, agents, and tools that you can use within LlamaIndex.
+이러한 모든 개념은 유용한 에이전트를 만들기 위해 다양한 시나리오에서 필요합니다.
+다음 섹션에서는 이러한 개념들을 각각 자세히 살펴볼 것입니다.
+개념을 마스터한 후, 우리의 학습을 사용하여 **에이전트 알프레드와 함께 적용된 사용 사례를 만들** 것입니다!
 
-All of these concepts are required in different scenarios to create useful agents.
-In the following sections, we will go over each of these concepts in detail.
-After mastering the concepts, we will use our learnings to **create applied use cases with Alfred the agent**!
-
-Getting our hands on LlamaIndex is exciting, right? So, what are we waiting for? Let's get started with **finding and installing the integrations we need using LlamaHub! 🚀**
+LlamaIndex를 직접 다루는 것이 흥미롭지 않나요? 그럼 무엇을 기다리고 있나요? **LlamaHub를 사용하여 필요한 통합을 찾고 설치하는** 것으로 시작해봅시다! 🚀

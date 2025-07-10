@@ -1,52 +1,52 @@
-# Using Tools in LlamaIndex
+# LlamaIndex에서 툴 사용하기
 
-**Defining a clear set of Tools is crucial to performance.** As we discussed in [unit 1](../../unit1/tools), clear tool interfaces are easier for LLMs to use.
-Much like a software API interface for human engineers, they can get more out of the tool if it's easy to understand how it works.
+**명확한 툴 세트를 정의하는 것이 성능에 중요합니다.** [1단원](../../unit1/tools)에서 논의했듯이, 명확한 툴 인터페이스는 LLM이 사용하기 쉽습니다.
+인간 엔지니어를 위한 소프트웨어 API 인터페이스와 마찬가지로, 툴이 어떻게 작동하는지 이해하기 쉽다면 더 많은 것을 얻을 수 있습니다.
 
-There are **four main types of tools in LlamaIndex**:
+**LlamaIndex에는 네 가지 주요 유형의 툴**이 있습니다:
 
-![Tools](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/tools.png)
+![툴](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/llama-index/tools.png)
 
-1. `FunctionTool`: Convert any Python function into a tool that an agent can use. It automatically figures out how the function works.
-2. `QueryEngineTool`: A tool that lets agents use query engines. Since agents are built on query engines, they can also use other agents as tools.
-3. `Toolspecs`: Sets of tools created by the community, which often include tools for specific services like Gmail.
-4. `Utility Tools`: Special tools that help handle large amounts of data from other tools.
+1. `FunctionTool`: 모든 Python 함수를 에이전트가 사용할 수 있는 툴로 변환합니다. 함수가 어떻게 작동하는지 자동으로 파악합니다.
+2. `QueryEngineTool`: 에이전트가 쿼리 엔진을 사용할 수 있게 하는 툴입니다. 에이전트는 쿼리 엔진 위에 구축되므로 다른 에이전트도 툴로 사용할 수 있습니다.
+3. `Toolspecs`: 커뮤니티에서 만든 툴 세트로, 종종 Gmail과 같은 특정 서비스를 위한 툴을 포함합니다.
+4. `Utility Tools`: 다른 툴에서 나오는 대량의 데이터를 처리하는 데 도움이 되는 특별한 툴입니다.
 
-We will go over each of them in more detail below.
+아래에서 각각에 대해 더 자세히 살펴보겠습니다.
 
-## Creating a FunctionTool
+## FunctionTool 만들기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/llama-index/tools.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+<a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/llama-index/tools.ipynb" target="_blank">이 노트북</a>을 따라가며 Google Colab에서 코드를 실행해볼 수 있습니다.
 </Tip>
 
-A FunctionTool provides a simple way to wrap any Python function and make it available to an agent.
-You can pass either a synchronous or asynchronous function to the tool, along with optional `name` and `description` parameters.
-The name and description are particularly important as they help the agent understand when and how to use the tool effectively.
-Let's look at how to create a FunctionTool below and then call it.
+FunctionTool은 모든 Python 함수를 래핑하고 에이전트가 사용할 수 있게 만드는 간단한 방법을 제공합니다.
+동기 또는 비동기 함수를 툴에 전달할 수 있으며, 선택적으로 `name`과 `description` 매개변수도 함께 전달할 수 있습니다.
+이름과 설명은 특히 중요합니다. 에이전트가 언제, 어떻게 툴을 효과적으로 사용할지 이해하는 데 도움이 되기 때문입니다.
+아래에서 FunctionTool을 만드는 방법을 살펴보고 호출해보겠습니다.
 
 ```python
 from llama_index.core.tools import FunctionTool
 
 def get_weather(location: str) -> str:
-    """Useful for getting the weather for a given location."""
-    print(f"Getting weather for {location}")
-    return f"The weather in {location} is sunny"
+    """주어진 위치의 날씨를 가져오는 데 유용합니다."""
+    print(f"{location}의 날씨를 가져오는 중")
+    return f"{location}의 날씨는 맑습니다"
 
 tool = FunctionTool.from_defaults(
     get_weather,
     name="my_weather_tool",
-    description="Useful for getting the weather for a given location.",
+    description="주어진 위치의 날씨를 가져오는 데 유용합니다.",
 )
-tool.call("New York")
+tool.call("뉴욕")
 ```
 
-<Tip>When using an agent or LLM with function calling, the tool selected (and the arguments written for that tool) rely strongly on the tool name and description of the purpose and arguments of the tool. Learn more about function calling in the <a href="https://docs.llamaindex.ai/en/stable/examples/workflow/function_calling_agent/">Function Calling Guide</a>.</Tip>
+<Tip>함수 호출이 있는 에이전트나 LLM을 사용할 때, 선택된 툴(그 툴에 대해 작성된 인수)은 툴의 목적과 인수에 대한 툴 이름과 설명에 크게 의존합니다. <a href="https://docs.llamaindex.ai/en/stable/examples/workflow/function_calling_agent/">함수 호출 가이드</a>에서 함수 호출에 대해 더 알아보세요.</Tip>
 
-## Creating a QueryEngineTool
+## QueryEngineTool 만들기
 
-The `QueryEngine` we defined in the previous unit can be easily transformed into a tool using the `QueryEngineTool` class.
-Let's see how to create a `QueryEngineTool` from a `QueryEngine` in the example below.
+이전 단원에서 정의한 `QueryEngine`은 `QueryEngineTool` 클래스를 사용하여 쉽게 툴로 변환할 수 있습니다.
+아래 예제에서 `QueryEngine`에서 `QueryEngineTool`을 만드는 방법을 살펴보겠습니다.
 
 ```python
 from llama_index.core import VectorStoreIndex
@@ -68,22 +68,22 @@ query_engine = index.as_query_engine(llm=llm)
 tool = QueryEngineTool.from_defaults(query_engine, name="some useful name", description="some useful description")
 ```
 
-## Creating Toolspecs
+## Toolspecs 만들기
 
-Think of `ToolSpecs` as collections of tools that work together harmoniously - like a well-organized professional toolkit.
-Just as a mechanic's toolkit contains complementary tools that work together for vehicle repairs, a `ToolSpec` combines related tools for specific purposes.
-For example, an accounting agent's `ToolSpec` might elegantly integrate spreadsheet capabilities, email functionality, and calculation tools to handle financial tasks with precision and efficiency.
+`ToolSpecs`를 조화롭게 함께 작동하는 툴 모음으로 생각하세요 - 잘 정리된 전문가 툴킷처럼요.
+정비사의 툴킷이 차량 수리를 위해 함께 작동하는 보완적인 툴들을 포함하는 것처럼, `ToolSpec`은 특정 목적을 위해 관련된 툴들을 결합합니다.
+예를 들어, 회계 에이전트의 `ToolSpec`은 스프레드시트 기능, 이메일 기능, 계산 툴을 우아하게 통합하여 재무 작업을 정확하고 효율적으로 처리할 수 있습니다.
 
 <details>
-<summary>Install the Google Toolspec</summary>
-As introduced in the <a href="./llama-hub">section on the LlamaHub</a>, we can install the Google toolspec with the following command:
+<summary>Google Toolspec 설치</summary>
+<a href="./llama-hub">LlamaHub 섹션</a>에서 소개된 대로, 다음 명령어로 Google toolspec을 설치할 수 있습니다:
 
 ```python
 pip install llama-index-tools-google
 ```
 </details>
 
-And now we can load the toolspec and convert it to a list of tools.
+이제 toolspec을 로드하고 툴 리스트로 변환할 수 있습니다.
 
 ```python
 from llama_index.tools.google import GmailToolSpec
@@ -92,22 +92,22 @@ tool_spec = GmailToolSpec()
 tool_spec_list = tool_spec.to_tool_list()
 ```
 
-To get a more detailed view of the tools, we can take a look at the `metadata` of each tool.
+툴에 대한 더 자세한 보기를 얻기 위해 각 툴의 `metadata`를 살펴볼 수 있습니다.
 
 ```python
 [(tool.metadata.name, tool.metadata.description) for tool in tool_spec_list]
 ```
 
-### Model Context Protocol (MCP) in LlamaIndex
+### LlamaIndex의 모델 컨텍스트 프로토콜 (MCP)
 
-LlamaIndex also allows using MCP tools through a [ToolSpec on the LlamaHub](https://llamahub.ai/l/tools/llama-index-tools-mcp?from=).
-You can simply run an MCP server and start using it through the following implementation.
+LlamaIndex는 [LlamaHub의 ToolSpec](https://llamahub.ai/l/tools/llama-index-tools-mcp?from=)을 통해 MCP 툴 사용도 허용합니다.
+단순히 MCP 서버를 실행하고 다음 구현을 통해 사용을 시작할 수 있습니다.
 
-If you want to dive deeper about MCP, you can check our [free MCP Course](https://huggingface.co/learn/mcp-course/). 
+MCP에 대해 더 깊이 알고 싶다면 [무료 MCP 강의](https://huggingface.co/learn/mcp-course/)를 확인할 수 있습니다.
 
 <details>
-<summary>Install the MCP Toolspec</summary>
-As introduced in the <a href="./llama-hub">section on the LlamaHub</a>, we can install the MCP toolspec with the following command:
+<summary>MCP Toolspec 설치</summary>
+<a href="./llama-hub">LlamaHub 섹션</a>에서 소개된 대로, 다음 명령어로 MCP toolspec을 설치할 수 있습니다:
 
 ```python
 pip install llama-index-tools-mcp
@@ -117,25 +117,25 @@ pip install llama-index-tools-mcp
 ```python
 from llama_index.tools.mcp import BasicMCPClient, McpToolSpec
 
-# We consider there is a mcp server running on 127.0.0.1:8000, or you can use the mcp client to connect to your own mcp server.
+# 127.0.0.1:8000에서 실행 중인 mcp 서버가 있다고 가정하거나, mcp 클라이언트를 사용하여 자체 mcp 서버에 연결할 수 있습니다.
 mcp_client = BasicMCPClient("http://127.0.0.1:8000/sse")
 mcp_tool = McpToolSpec(client=mcp_client)
 
-# get the agent
+# 에이전트 가져오기
 agent = await get_agent(mcp_tool)
 
-# create the agent context
+# 에이전트 컨텍스트 생성
 agent_context = Context(agent)
 ```
 
-## Utility Tools
+## 유틸리티 툴
 
-Oftentimes, directly querying an API **can return an excessive amount of data**, some of which may be irrelevant, overflow the context window of the LLM, or unnecessarily increase the number of tokens that you are using.
-Let's walk through our two main utility tools below.
+종종 API를 직접 쿼리하는 것은 **과도한 양의 데이터를 반환할 수 있으며**, 그 중 일부는 관련이 없거나, LLM의 컨텍스트 윈도우를 넘치거나, 사용하는 토큰 수를 불필요하게 증가시킬 수 있습니다.
+아래에서 두 가지 주요 유틸리티 툴을 살펴보겠습니다.
 
-1. `OnDemandToolLoader`: This tool turns any existing LlamaIndex data loader (BaseReader class) into a tool that an agent can use. The tool can be called with all the parameters needed to trigger `load_data` from the data loader, along with a natural language query string. During execution, we first load data from the data loader, index it (for instance with a vector store), and then query it 'on-demand'. All three of these steps happen in a single tool call.
-2. `LoadAndSearchToolSpec`: The LoadAndSearchToolSpec takes in any existing Tool as input. As a tool spec, it implements `to_tool_list`, and when that function is called, two tools are returned: a loading tool and then a search tool. The load Tool execution would call the underlying Tool, and then index the output (by default with a vector index). The search Tool execution would take in a query string as input and call the underlying index.
+1. `OnDemandToolLoader`: 이 툴은 기존 LlamaIndex 데이터 로더(BaseReader 클래스)를 에이전트가 사용할 수 있는 툴로 변환합니다. 툴은 데이터 로더에서 `load_data`를 트리거하는 데 필요한 모든 매개변수와 자연어 쿼리 문자열로 호출할 수 있습니다. 실행 중에 먼저 데이터 로더에서 데이터를 로드하고, 인덱싱하고(예를 들어 벡터 스토어로), 그런 다음 '온디맨드'로 쿼리합니다. 이 세 단계 모두가 단일 툴 호출에서 발생합니다.
+2. `LoadAndSearchToolSpec`: LoadAndSearchToolSpec은 기존 툴을 입력으로 받습니다. 툴 스펙으로서 `to_tool_list`를 구현하며, 해당 함수가 호출되면 두 개의 툴이 반환됩니다: 로딩 툴과 검색 툴입니다. 로드 툴 실행은 기본 툴을 호출한 다음 출력을 인덱싱합니다(기본적으로 벡터 인덱스로). 검색 툴 실행은 쿼리 문자열을 입력으로 받아 기본 인덱스를 호출합니다.
 
-<Tip>You can find toolspecs and utility tools on the <a href="https://llamahub.ai/">LlamaHub</a></Tip>
+<Tip>toolspecs와 유틸리티 툴은 <a href="https://llamahub.ai/">LlamaHub</a>에서 찾을 수 있습니다</Tip>
 
-Now that we understand the basics of agents and tools in LlamaIndex, let's see how we can **use LlamaIndex to create configurable and manageable workflows!**
+이제 LlamaIndex에서 에이전트와 툴의 기본을 이해했으니, LlamaIndex를 사용하여 **구성 가능하고 관리 가능한 워크플로우를 만드는** 방법을 살펴보겠습니다!
