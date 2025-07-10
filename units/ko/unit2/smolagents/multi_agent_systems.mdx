@@ -5,59 +5,59 @@
 ]}
 askForHelpUrl="http://hf.co/join/discord" />
 
-# Multi-Agent Systems
+# 멀티 에이전트 시스템
 
-Multi-agent systems enable **specialized agents to collaborate on complex tasks**, improving modularity, scalability, and robustness. Instead of relying on a single agent, tasks are distributed among agents with distinct capabilities.  
+멀티 에이전트 시스템은 **특화된 에이전트들이 협력하여 복잡한 작업을 해결**할 수 있게 해주며, 모듈성, 확장성, 견고성을 높여줍니다. 단일 에이전트에 의존하는 대신, 각기 다른 능력을 가진 에이전트들이 작업을 분담합니다.
 
-In **smolagents**, different agents can be combined to generate Python code, call external tools, perform web searches, and more. By orchestrating these agents, we can create powerful workflows.
+**smolagents**에서는 다양한 에이전트를 결합해 파이썬 코드 생성, 외부 도구 호출, 웹 검색 등 다양한 작업을 수행할 수 있습니다. 이러한 에이전트들을 조율함으로써 강력한 워크플로우를 만들 수 있습니다.
 
-A typical setup might include:
-- A **Manager Agent** for task delegation  
-- A **Code Interpreter Agent** for code execution  
-- A **Web Search Agent** for information retrieval  
+일반적인 구성 예시:
+- **매니저 에이전트**: 작업 분배 담당
+- **코드 인터프리터 에이전트**: 코드 실행 담당
+- **웹 검색 에이전트**: 정보 검색 담당
 
-The diagram below illustrates a simple multi-agent architecture where a **Manager Agent** coordinates a **Code Interpreter Tool** and a **Web Search Agent**, which in turn utilizes tools like the `DuckDuckGoSearchTool` and `VisitWebpageTool` to gather relevant information.
+아래 다이어그램은 **매니저 에이전트**가 **코드 인터프리터 도구**와 **웹 검색 에이전트**를 조율하는 간단한 멀티 에이전트 아키텍처를 보여줍니다. 웹 검색 에이전트는 `DuckDuckGoSearchTool`과 `VisitWebpageTool` 같은 도구를 활용해 정보를 수집합니다.
 
 <img src="https://mermaid.ink/img/pako:eNp1kc1qhTAQRl9FUiQb8wIpdNO76eKubrmFks1oRg3VSYgjpYjv3lFL_2hnMWQOJwn5sqgmelRWleUSKLAtFs09jqhtoWuYUFfFAa6QA9QDTnpzamheuhxn8pt40-6l13UtS0ddhtQXj6dbR4XUGQg6zEYasTF393KjeSDGnDJKNxzj8I_7hLW5IOSmP9CH9hv_NL-d94d4DVNg84p1EnK4qlIj5hGClySWbadT-6OdsrL02MI8sFOOVkciw8zx8kaNspxnrJQE0fXKtjBMMs3JA-MpgOQwftIE9Bzj14w-cMznI_39E9Z3p0uFoA?type=png" style='background: white;'>
 
-## Multi-Agent Systems in Action  
+## 멀티 에이전트 시스템 실전 예시
 
-A multi-agent system consists of multiple specialized agents working together under the coordination of an **Orchestrator Agent**. This approach enables complex workflows by distributing tasks among agents with distinct roles.  
+멀티 에이전트 시스템은 여러 특화 에이전트가 **오케스트레이터 에이전트**의 조율 아래 협력하는 구조입니다. 이 방식은 역할이 다른 에이전트들에게 작업을 분산시켜 복잡한 워크플로우를 구현할 수 있게 해줍니다.
 
-For example, a **Multi-Agent RAG system** can integrate:  
-- A **Web Agent** for browsing the internet.  
-- A **Retriever Agent** for fetching information from knowledge bases.  
-- An **Image Generation Agent** for producing visuals.  
+예를 들어, **멀티 에이전트 RAG 시스템**은 다음을 통합할 수 있습니다:
+- **웹 에이전트**: 인터넷 브라우징 담당
+- **리트리버 에이전트**: 지식 베이스 정보 검색 담당
+- **이미지 생성 에이전트**: 시각 자료 생성 담당
 
-All of these agents operate under an orchestrator that manages task delegation and interaction.  
+이 모든 에이전트는 오케스트레이터가 작업 분배와 상호작용을 관리합니다.
 
-## Solving a complex task with a multi-agent hierarchy
+## 멀티 에이전트 계층 구조로 복잡한 문제 해결하기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/multiagent_notebook.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+<a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/multiagent_notebook.ipynb" target="_blank">이 노트북</a>을 따라가며 코드를 직접 실행해볼 수 있습니다.
 </Tip>
 
-The reception is approaching! With your help, Alfred is now nearly finished with the preparations.
+리셉션이 다가오고 있습니다! 여러분의 도움으로 Alfred는 거의 모든 준비를 마쳤습니다.
 
-But now there's a problem: the Batmobile has disappeared. Alfred needs to find a replacement, and find it quickly.
+하지만 문제가 생겼습니다: 배트모빌이 사라졌습니다. Alfred는 대체 차량을 빨리 찾아야 합니다.
 
-Fortunately, a few biopics have been done on Bruce Wayne's life, so maybe Alfred could get a car left behind on one of the movie sets, and re-engineer it up to modern standards, which certainly would include a full self-driving option.
+다행히 브루스 웨인의 삶을 다룬 바이오픽 영화가 몇 편 제작되었으니, Alfred는 영화 세트장에 남겨진 차량을 찾아 현대식으로 개조할 수 있을지도 모릅니다. 물론 자율주행 기능도 필수겠죠.
 
-But this could be anywhere in the filming locations around the world - which could be numerous.
+하지만 이 차량들은 전 세계 촬영지 어디에나 있을 수 있습니다.
 
-So Alfred wants your help. Could you build an agent able to solve this task?
+그래서 Alfred는 여러분의 도움이 필요합니다. 이 문제를 해결할 수 있는 에이전트를 만들어볼까요?
 
-> 👉 Find all Batman filming locations in the world, calculate the time to transfer via boat to there, and represent them on a map, with a color varying by boat transfer time. Also represent some supercar factories with the same boat transfer time.
+> 👉 전 세계 배트맨 촬영지를 모두 찾아, 고담(40.7128° N, 74.0060° W)까지 화물선(비행기)으로 이동하는 데 걸리는 시간을 계산하고, 이를 지도에 표시하세요. 이동 시간에 따라 색상을 다르게 하고, 슈퍼카 공장도 같은 방식으로 표시하세요.
 
-Let's build this!
+함께 만들어봅시다!
 
-This example needs some additional packages, so let's install them first:
+이 예시에는 추가 패키지가 필요하니 먼저 설치해 주세요:
 
 ```bash
 pip install 'smolagents[litellm]' plotly geopandas shapely kaleido -q
 ```
 
-### We first make a tool to get the cargo plane transfer time.
+### 먼저 화물기 이동 시간 계산 도구를 만듭니다.
 
 ```python
 import math
@@ -70,35 +70,35 @@ from smolagents import tool
 def calculate_cargo_travel_time(
     origin_coords: Tuple[float, float],
     destination_coords: Tuple[float, float],
-    cruising_speed_kmh: Optional[float] = 750.0,  # Average speed for cargo planes
+    cruising_speed_kmh: Optional[float] = 750.0,  # 화물기 평균 속도
 ) -> float:
     """
-    Calculate the travel time for a cargo plane between two points on Earth using great-circle distance.
+    두 지점(위도, 경도) 간 화물기 이동 시간을 대권거리로 계산합니다.
 
     Args:
-        origin_coords: Tuple of (latitude, longitude) for the starting point
-        destination_coords: Tuple of (latitude, longitude) for the destination
-        cruising_speed_kmh: Optional cruising speed in km/h (defaults to 750 km/h for typical cargo planes)
+        origin_coords: 출발지 (위도, 경도) 튜플
+        destination_coords: 도착지 (위도, 경도) 튜플
+        cruising_speed_kmh: 순항 속도(km/h, 기본값 750)
 
     Returns:
-        float: The estimated travel time in hours
+        float: 예상 이동 시간(시간 단위)
 
     Example:
-        >>> # Chicago (41.8781° N, 87.6298° W) to Sydney (33.8688° S, 151.2093° E)
+        >>> # 시카고(41.8781° N, 87.6298° W) → 시드니(33.8688° S, 151.2093° E)
         >>> result = calculate_cargo_travel_time((41.8781, -87.6298), (-33.8688, 151.2093))
     """
 
     def to_radians(degrees: float) -> float:
         return degrees * (math.pi / 180)
 
-    # Extract coordinates
+    # 좌표 변환
     lat1, lon1 = map(to_radians, origin_coords)
     lat2, lon2 = map(to_radians, destination_coords)
 
-    # Earth's radius in kilometers
+    # 지구 반지름(km)
     EARTH_RADIUS_KM = 6371.0
 
-    # Calculate great-circle distance using the haversine formula
+    # haversine 공식으로 대권거리 계산
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
@@ -109,27 +109,23 @@ def calculate_cargo_travel_time(
     c = 2 * math.asin(math.sqrt(a))
     distance = EARTH_RADIUS_KM * c
 
-    # Add 10% to account for non-direct routes and air traffic controls
+    # 우회 경로, 관제 등 감안해 10% 추가
     actual_distance = distance * 1.1
 
-    # Calculate flight time
-    # Add 1 hour for takeoff and landing procedures
+    # 비행 시간 계산(이착륙 1시간 추가)
     flight_time = (actual_distance / cruising_speed_kmh) + 1.0
 
-    # Format the results
     return round(flight_time, 2)
 
 
 print(calculate_cargo_travel_time((41.8781, -87.6298), (-33.8688, 151.2093)))
 ```
 
-### Setting up the agent
+### 에이전트 설정하기
 
-For the model provider, we use Together AI, one of the new [inference providers on the Hub](https://huggingface.co/blog/inference-providers)!
+모델 제공자는 Together AI를 사용합니다. GoogleSearchTool은 [Serper API](https://serper.dev)를 사용하므로, 환경 변수 `SERPAPI_API_KEY`(provider="serpapi") 또는 `SERPER_API_KEY`(provider=serper)를 설정해야 합니다.
 
-The GoogleSearchTool uses the [Serper API](https://serper.dev) to search the web, so this requires either having setup env variable `SERPAPI_API_KEY` and passing `provider="serpapi"` or having `SERPER_API_KEY` and passing `provider=serper`.
-
-If you don't have any Serp API provider setup, you can use `DuckDuckGoSearchTool` but beware that it has a rate limit.
+Serp API가 없다면 `DuckDuckGoSearchTool`을 사용할 수 있지만, 속도 제한에 유의하세요.
 
 ```python
 import os
@@ -139,11 +135,10 @@ from smolagents import CodeAgent, GoogleSearchTool, InferenceClientModel, VisitW
 model = InferenceClientModel(model_id="Qwen/Qwen2.5-Coder-32B-Instruct", provider="together")
 ```
 
-We can start by creating a simple agent as a baseline to give us a simple report.
+간단한 에이전트를 만들어 기본 리포트를 받아봅시다.
 
 ```python
-task = """Find all Batman filming locations in the world, calculate the time to transfer via cargo plane to here (we're in Gotham, 40.7128° N, 74.0060° W), and return them to me as a pandas dataframe.
-Also give me some supercar factories with the same cargo plane transfer time."""
+task = """전 세계 배트맨 촬영지를 모두 찾아, 고담(40.7128° N, 74.0060° W)까지 화물기로 이동하는 시간을 계산해 pandas 데이터프레임으로 반환하세요. 슈퍼카 공장도 같은 방식으로 포함하세요."""
 ```
 
 ```python
@@ -163,7 +158,7 @@ result = agent.run(task)
 result
 ```
 
-In our case, it generates this output:
+실행 결과 예시:
 
 ```python
 |  | Location                                             | Travel Time to Gotham (hours) |
@@ -186,17 +181,17 @@ In our case, it generates this output:
 | 15 | Woking, UK (McLaren)                             | 9.13                         |
 ```
 
-We could already improve this a bit by throwing in some dedicated planning steps, and adding more prompting.
+계획 단계(planning step)를 추가하고 프롬프트를 보강하면 더 나은 결과를 얻을 수 있습니다.
 
-Planning steps allow the agent to think ahead and plan its next steps, which can be useful for more complex tasks.
+계획 단계는 에이전트가 다음 단계를 미리 생각하고 계획할 수 있게 해줍니다.
 
 ```python
 agent.planning_interval = 4
 
 detailed_report = agent.run(f"""
-You're an expert analyst. You make comprehensive reports after visiting many websites.
-Don't hesitate to search for many queries at once in a for loop.
-For each data point that you find, visit the source url to confirm numbers.
+여러분은 전문 분석가입니다. 여러 웹사이트를 방문해 종합 리포트를 작성합니다.
+for 루프를 활용해 여러 쿼리를 한 번에 검색하세요.
+각 데이터 포인트마다 소스 URL을 방문해 수치를 확인하세요.
 
 {task}
 """)
@@ -208,7 +203,7 @@ print(detailed_report)
 detailed_report
 ```
 
-In our case, it generates this output:
+실행 결과 예시:
 
 ```python
 |  | Location                                         | Travel Time (hours) |
@@ -217,22 +212,21 @@ In our case, it generates this output:
 | 1  | Wishart Street, Glasgow, Scotland, UK         | 8.6                 |
 ```
 
+이처럼 프롬프트와 계획 기능만으로도 훨씬 간결한 리포트를 얻을 수 있습니다!
 
-Thanks to these quick changes, we obtained a much more concise report by simply providing our agent a detailed prompt, and giving it planning capabilities!
+모델의 컨텍스트 윈도우가 빠르게 채워집니다. **따라서 상세 검색 결과와 다른 결과를 결합하도록 요청하면 느려지고 토큰·비용이 급증할 수 있습니다.**
 
-The model's context window is quickly filling up. So **if we ask our agent to combine the results of detailed search with another, it will be slower and quickly ramp up tokens and costs**.
+➡️ 시스템 구조를 개선해야 합니다.
 
-➡️ We need to improve the structure of our system.
+### ✌️ 두 에이전트로 작업 분할하기
 
-### ✌️ Splitting the task between two agents
+멀티 에이전트 구조는 서로 다른 하위 작업의 메모리를 분리해 두 가지 큰 이점을 제공합니다:
+- 각 에이전트가 핵심 작업에 집중해 성능이 향상됩니다.
+- 메모리 분리로 각 단계의 입력 토큰 수가 줄어, 지연과 비용이 감소합니다.
 
-Multi-agent structures allow to separate memories between different sub-tasks, with two great benefits:
-- Each agent is more focused on its core task, thus more performant
-- Separating memories reduces the count of input tokens at each step, thus reducing latency and cost.
+웹 검색 전담 에이전트와 이를 관리하는 매니저 에이전트로 팀을 만들어봅시다.
 
-Let's create a team with a dedicated web search agent, managed by another agent.
-
-The manager agent should have plotting capabilities to write its final report: so let us give it access to additional imports, including `plotly`, and `geopandas` + `shapely` for spatial plotting.
+매니저 에이전트는 최종 리포트 작성을 위해 추가 import(`plotly`, `geopandas`, `shapely`)가 필요합니다.
 
 ```python
 model = InferenceClientModel(
@@ -247,15 +241,13 @@ web_agent = CodeAgent(
         calculate_cargo_travel_time,
     ],
     name="web_agent",
-    description="Browses the web to find information",
+    description="웹에서 정보를 찾는 역할",
     verbosity_level=0,
     max_steps=10,
 )
 ```
 
-The manager agent will need to do some mental heavy lifting.
-
-So we give it the stronger model [DeepSeek-R1](https://huggingface.co/deepseek-ai/DeepSeek-R1), and add a `planning_interval` to the mix.
+매니저 에이전트는 더 강력한 모델 [DeepSeek-R1](https://huggingface.co/deepseek-ai/DeepSeek-R1)을 사용하고, `planning_interval`도 추가합니다.
 
 ```python
 from smolagents.utils import encode_image_base64, make_image_url
@@ -265,14 +257,14 @@ from smolagents import OpenAIServerModel
 def check_reasoning_and_plot(final_answer, agent_memory):
     multimodal_model = OpenAIServerModel("gpt-4o", max_tokens=8096)
     filepath = "saved_map.png"
-    assert os.path.exists(filepath), "Make sure to save the plot under saved_map.png!"
+    assert os.path.exists(filepath), "saved_map.png 파일이 저장되어야 합니다!"
     image = Image.open(filepath)
     prompt = (
-        f"Here is a user-given task and the agent steps: {agent_memory.get_succinct_steps()}. Now here is the plot that was made."
-        "Please check that the reasoning process and plot are correct: do they correctly answer the given task?"
-        "First list reasons why yes/no, then write your final decision: PASS in caps lock if it is satisfactory, FAIL if it is not."
-        "Don't be harsh: if the plot mostly solves the task, it should pass."
-        "To pass, a plot should be made using px.scatter_map and not any other method (scatter_map looks nicer)."
+        f"다음은 사용자 요청과 에이전트 단계입니다: {agent_memory.get_succinct_steps()}. 아래는 생성된 지도입니다."
+        "추론 과정과 지도가 요청을 올바르게 해결하는지 확인하세요."
+        "먼저 이유를 나열한 뒤, 최종 결정(PASS/FAIL)을 작성하세요."
+        "너무 엄격할 필요는 없습니다. 대부분 해결했다면 PASS입니다."
+        "지도는 px.scatter_map으로 만들어야 PASS입니다."
     )
     messages = [
         {
@@ -290,7 +282,7 @@ def check_reasoning_and_plot(final_answer, agent_memory):
         }
     ]
     output = multimodal_model(messages).content
-    print("Feedback: ", output)
+    print("피드백: ", output)
     if "FAIL" in output:
         raise Exception(output)
     return True
@@ -315,13 +307,13 @@ manager_agent = CodeAgent(
 )
 ```
 
-Let us inspect what this team looks like:
+이 팀의 구조를 시각화해봅시다:
 
 ```python
 manager_agent.visualize()
 ```
 
-This will generate something like this, helping us understand the structure and relationship between agents and tools used:
+아래와 같이 구조와 도구 사용 관계를 한눈에 볼 수 있습니다:
 
 ```python
 CodeAgent | deepseek-ai/DeepSeek-R1
@@ -330,58 +322,34 @@ CodeAgent | deepseek-ai/DeepSeek-R1
 │   ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 │   ┃ Name                        ┃ Description                           ┃ Arguments                             ┃
 │   ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│   │ calculate_cargo_travel_time │ Calculate the travel time for a cargo │ origin_coords (`array`): Tuple of     │
-│   │                             │ plane between two points on Earth     │ (latitude, longitude) for the         │
-│   │                             │ using great-circle distance.          │ starting point                        │
-│   │                             │                                       │ destination_coords (`array`): Tuple   │
-│   │                             │                                       │ of (latitude, longitude) for the      │
-│   │                             │                                       │ destination                           │
-│   │                             │                                       │ cruising_speed_kmh (`number`):        │
-│   │                             │                                       │ Optional cruising speed in km/h       │
-│   │                             │                                       │ (defaults to 750 km/h for typical     │
-│   │                             │                                       │ cargo planes)                         │
-│   │ final_answer                │ Provides a final answer to the given  │ answer (`any`): The final answer to   │
-│   │                             │ problem.                              │ the problem                           │
+│   │ calculate_cargo_travel_time │ 두 지점 간 화물기 이동 시간 계산         │ origin_coords (`array`): 출발지 좌표   │
+│   │                             │                                       │ destination_coords (`array`): 도착지   │
+│   │                             │                                       │ cruising_speed_kmh (`number`): 속도    │
+│   │ final_answer                │ 문제에 대한 최종 답변 제공              │ answer (`any`): 최종 답변              │
 │   └─────────────────────────────┴───────────────────────────────────────┴───────────────────────────────────────┘
 └── 🤖 Managed agents:
     └── web_agent | CodeAgent | Qwen/Qwen2.5-Coder-32B-Instruct
         ├── ✅ Authorized imports: []
-        ├── 📝 Description: Browses the web to find information
+        ├── 📝 Description: 웹에서 정보를 찾는 역할
         └── 🛠️ Tools:
             ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
             ┃ Name                        ┃ Description                       ┃ Arguments                         ┃
             ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-            │ web_search                  │ Performs a google web search for  │ query (`string`): The search      │
-            │                             │ your query then returns a string  │ query to perform.                 │
-            │                             │ of the top search results.        │ filter_year (`integer`):          │
-            │                             │                                   │ Optionally restrict results to a  │
-            │                             │                                   │ certain year                      │
-            │ visit_webpage               │ Visits a webpage at the given url │ url (`string`): The url of the    │
-            │                             │ and reads its content as a        │ webpage to visit.                 │
-            │                             │ markdown string. Use this to      │                                   │
-            │                             │ browse webpages.                  │                                   │
-            │ calculate_cargo_travel_time │ Calculate the travel time for a   │ origin_coords (`array`): Tuple of │
-            │                             │ cargo plane between two points on │ (latitude, longitude) for the     │
-            │                             │ Earth using great-circle          │ starting point                    │
-            │                             │ distance.                         │ destination_coords (`array`):     │
-            │                             │                                   │ Tuple of (latitude, longitude)    │
-            │                             │                                   │ for the destination               │
-            │                             │                                   │ cruising_speed_kmh (`number`):    │
-            │                             │                                   │ Optional cruising speed in km/h   │
-            │                             │                                   │ (defaults to 750 km/h for typical │
-            │                             │                                   │ cargo planes)                     │
-            │ final_answer                │ Provides a final answer to the    │ answer (`any`): The final answer  │
-            │                             │ given problem.                    │ to the problem                    │
+            │ web_search                  │ 구글 웹 검색 수행                  │ query (`string`): 검색어           │
+            │                             │                                   │ filter_year (`integer`): 연도 제한 │
+            │ visit_webpage               │ 웹페이지 방문 및 내용 읽기         │ url (`string`): 방문할 URL         │
+            │ calculate_cargo_travel_time │ 두 지점 간 화물기 이동 시간 계산   │ origin_coords (`array`): 출발지     │
+            │                             │                                   │ destination_coords (`array`): 도착지│
+            │                             │                                   │ cruising_speed_kmh (`number`): 속도 │
+            │ final_answer                │ 문제에 대한 최종 답변 제공         │ answer (`any`): 최종 답변           │
             └─────────────────────────────┴───────────────────────────────────┴───────────────────────────────────┘
 ```
 
 ```python
 manager_agent.run("""
-Find all Batman filming locations in the world, calculate the time to transfer via cargo plane to here (we're in Gotham, 40.7128° N, 74.0060° W).
-Also give me some supercar factories with the same cargo plane transfer time. You need at least 6 points in total.
-Represent this as spatial map of the world, with the locations represented as scatter points with a color that depends on the travel time, and save it to saved_map.png!
+전 세계 배트맨 촬영지를 모두 찾아, 고담(40.7128° N, 74.0060° W)까지 화물기로 이동하는 시간을 계산하세요. 슈퍼카 공장도 같은 방식으로 포함해 총 6개 이상 지점을 지도에 산점도로 표시하고, 이동 시간에 따라 색상을 다르게 하세요. 결과 이미지는 saved_map.png로 저장하세요!
 
-Here's an example of how to plot and return a map:
+지도 예시:
 import plotly.express as px
 df = px.data.carshare()
 fig = px.scatter_map(df, lat="centroid_lat", lon="centroid_lon", text="name", color="peak_hour", size=100,
@@ -390,24 +358,24 @@ fig.show()
 fig.write_image("saved_image.png")
 final_answer(fig)
 
-Never try to process strings using code: when you have a string to read, just print it and you'll see it.
+문자열을 코드로 처리하지 마세요. 문자열이 있으면 print로 출력하세요.
 """)
 ```
 
-I don't know how that went in your run, but in mine, the manager agent skilfully divided tasks given to the web agent in `1. Search for Batman filming locations`, then `2. Find supercar factories`, before aggregating the lists and plotting the map.
+제 실행에서는 매니저 에이전트가 웹 에이전트에게 `1. 배트맨 촬영지 검색`, `2. 슈퍼카 공장 찾기`로 작업을 분배한 뒤, 결과를 집계해 지도를 그렸습니다.
 
-Let's see what the map looks like by inspecting it directly from the agent state:
+에이전트 상태에서 지도를 직접 확인해봅시다:
 
 ```python
 manager_agent.python_executor.state["fig"]
 ```
 
-This will output the map:
+아래와 같이 지도가 출력됩니다:
 
-![Multiagent system example output map](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/smolagents/output_map.png)
+![멀티에이전트 시스템 예시 출력 지도](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/smolagents/output_map.png)
 
-## Resources
+## 참고 자료
 
-- [Multi-Agent Systems](https://huggingface.co/docs/smolagents/main/en/examples/multiagents) – Overview of multi-agent systems.  
-- [What is Agentic RAG?](https://weaviate.io/blog/what-is-agentic-rag) – Introduction to Agentic RAG.  
-- [Multi-Agent RAG System 🤖🤝🤖 Recipe](https://huggingface.co/learn/cookbook/multiagent_rag_system) – Step-by-step guide to building a multi-agent RAG system.  
+- [멀티 에이전트 시스템](https://huggingface.co/docs/smolagents/main/en/examples/multiagents) – 멀티 에이전트 시스템 개요
+- [Agentic RAG란?](https://weaviate.io/blog/what-is-agentic-rag) – Agentic RAG 소개
+- [Multi-Agent RAG System 🤖🤝🤖 레시피](https://huggingface.co/learn/cookbook/multiagent_rag_system) – 단계별 구축 가이드

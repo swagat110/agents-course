@@ -5,31 +5,31 @@
 ]}
 askForHelpUrl="http://hf.co/join/discord" />
 
-# Vision Agents with smolagents
+# smolagents로 비전 에이전트 만들기
 
 <Tip warning={true}>
-The examples in this section require access to a powerful VLM model. We tested them using the GPT-4o API.  
-However, <a href="./why_use_smolagents">Why use smolagents</a> discusses alternative solutions supported by smolagents and Hugging Face. If you'd like to explore other options, be sure to check that section.
+이 섹션의 예제는 강력한 VLM(비전-언어 모델) API가 필요합니다. 우리는 GPT-4o API로 테스트했습니다.  
+하지만 <a href="./why_use_smolagents">Why use smolagents</a>에서는 smolagents와 Hugging Face에서 지원하는 대체 솔루션도 다루고 있습니다. 다른 옵션을 탐색하고 싶다면 해당 섹션을 참고하세요.
 </Tip>
 
-Empowering agents with visual capabilities is crucial for solving tasks that go beyond text processing. Many real-world challenges, such as web browsing or document understanding, require analyzing rich visual content. Fortunately, `smolagents` provides built-in support for vision-language models (VLMs), enabling agents to process and interpret images effectively.  
+에이전트에 시각적 능력을 부여하는 것은 텍스트 처리 이상의 실제 문제를 해결하는 데 매우 중요합니다. 웹 브라우징이나 문서 이해 등 많은 실제 과제는 풍부한 시각 정보를 분석해야 합니다. 다행히도, `smolagents`는 비전-언어 모델(VLM)을 내장 지원하여 에이전트가 이미지를 효과적으로 처리하고 해석할 수 있게 해줍니다.  
 
-In this example, imagine Alfred, the butler at Wayne Manor, is tasked with verifying the identities of the guests attending the party. As you can imagine, Alfred may not be familiar with everyone arriving. To help him, we can use an agent that verifies their identity by searching for visual information about their appearance using a VLM. This will allow Alfred to make informed decisions about who can enter. Let's build this example!
+이 예시에서, Wayne Manor의 집사 Alfred는 파티에 참석하는 손님들의 신원을 확인하는 임무를 맡았습니다. Alfred는 모든 손님을 알지 못할 수 있으므로, 손님의 외모에 대한 시각 정보를 검색해 신원을 확인하는 에이전트를 사용할 수 있습니다. 이를 통해 Alfred는 입장 허가 여부를 현명하게 결정할 수 있습니다. 예시를 함께 만들어봅시다!
 
 
-## Providing Images at the Start of the Agent's Execution
+## 에이전트 실행 시작 시 이미지 제공하기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/vision_agents.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+코드는 <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/vision_agents.ipynb" target="_blank">이 노트북</a>에서 따라할 수 있습니다. Google Colab에서 실행할 수 있습니다.
 </Tip>
 
-In this approach, images are passed to the agent at the start and stored as `task_images` alongside the task prompt. The agent then processes these images throughout its execution.  
+이 방식에서는 이미지를 에이전트 실행 시점에 `task_images`로 전달합니다. 에이전트는 이 이미지를 전체 실행 과정에서 활용합니다.  
 
-Consider the case where Alfred wants to verify the identities of the superheroes attending the party. He already has a dataset of images from previous parties with the names of the guests. Given a new visitor's image, the agent can compare it with the existing dataset and make a decision about letting them in.  
+예를 들어, Alfred는 이전 파티에서 손님들의 이름과 함께 저장된 이미지 데이터셋을 가지고 있습니다. 새로운 방문객의 이미지를 받아, 기존 데이터셋과 비교해 입장 허가 여부를 결정할 수 있습니다.  
 
-In this case, a guest is trying to enter, and Alfred suspects that this visitor might be The Joker impersonating Wonder Woman. Alfred needs to verify their identity to prevent anyone unwanted from entering.  
+이번에는 한 손님이 입장하려고 하는데, Alfred는 이 손님이 Wonder Woman으로 위장한 Joker일 수 있다고 의심합니다. Alfred는 신원을 확인해 원치 않는 인물이 입장하지 못하도록 해야 합니다.  
 
-Let’s build the example. First, the images are loaded. In this case, we use images from Wikipedia to keep the example minimal, but imagine the possible use-case! 
+예시를 만들어봅시다. 우선 이미지를 불러옵니다. 여기서는 위키피디아 이미지를 사용하지만, 실제로는 다양한 활용이 가능합니다!
 
 ```python
 from PIL import Image
@@ -37,8 +37,8 @@ import requests
 from io import BytesIO
 
 image_urls = [
-    "https://upload.wikimedia.org/wikipedia/commons/e/e8/The_Joker_at_Wax_Museum_Plus.jpg", # Joker image
-    "https://upload.wikimedia.org/wikipedia/en/9/98/Joker_%28DC_Comics_character%29.jpg" # Joker image
+    "https://upload.wikimedia.org/wikipedia/commons/e/e8/The_Joker_at_Wax_Museum_Plus.jpg", # Joker 이미지
+    "https://upload.wikimedia.org/wikipedia/en/9/98/Joker_%28DC_Comics_character%29.jpg" # Joker 이미지
 ]
 
 images = []
@@ -51,14 +51,14 @@ for url in image_urls:
     images.append(image)
 ```
 
-Now that we have the images, the agent will tell us whether one guest is actually a superhero (Wonder Woman) or a villain (The Joker).
+이제 이미지를 준비했으니, 에이전트가 손님이 Wonder Woman인지 Joker인지 판별해줍니다.
 
 ```python
 from smolagents import CodeAgent, OpenAIServerModel
 
 model = OpenAIServerModel(model_id="gpt-4o")
 
-# Instantiate the agent
+# 에이전트 인스턴스화
 agent = CodeAgent(
     tools=[],
     model=model,
@@ -68,115 +68,115 @@ agent = CodeAgent(
 
 response = agent.run(
     """
-    Describe the costume and makeup that the comic character in these photos is wearing and return the description.
-    Tell me if the guest is The Joker or Wonder Woman.
+    이 사진 속 만화 캐릭터의 의상과 메이크업을 묘사해 주세요.
+    손님이 The Joker인지 Wonder Woman인지 알려주세요.
     """,
     images=images
 )
 ```
 
-In the case of my run, the output is the following, although it could vary in your case, as we've already discussed:
+실행 결과는 다음과 같습니다(실행 환경에 따라 다를 수 있습니다):
 
 ```python
     {
         'Costume and Makeup - First Image': (
-            'Purple coat and a purple silk-like cravat or tie over a mustard-yellow shirt.',
-            'White face paint with exaggerated features, dark eyebrows, blue eye makeup, red lips forming a wide smile.'
+            '보라색 코트와 노란색 셔츠 위에 보라색 실크 크라바트 또는 타이.',
+            '흰색 얼굴 분장, 과장된 이목구비, 진한 눈썹, 파란 아이섀도, 빨간 입술로 넓은 미소.'
         ),
         'Costume and Makeup - Second Image': (
-            'Dark suit with a flower on the lapel, holding a playing card.',
-            'Pale skin, green hair, very red lips with an exaggerated grin.'
+            '꽃이 달린 어두운 정장, 손에 트럼프 카드를 들고 있음.',
+            '창백한 피부, 초록색 머리, 과장된 미소의 빨간 입술.'
         ),
-        'Character Identity': 'This character resembles known depictions of The Joker from comic book media.'
+        'Character Identity': '이 캐릭터는 만화에서 묘사된 The Joker와 유사합니다.'
     }
 ```
 
-In this case, the output reveals that the person is impersonating someone else, so we can prevent The Joker from entering the party!
+이처럼, 결과를 통해 손님이 다른 인물로 위장했음을 알 수 있으므로, Alfred는 Joker의 입장을 막을 수 있습니다!
 
-## Providing Images with Dynamic Retrieval
+## 동적 검색으로 이미지 제공하기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/vision_web_browser.py" target="_blank">this Python file</a>
+코드는 <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/vision_web_browser.py" target="_blank">이 Python 파일</a>에서 따라할 수 있습니다.
 </Tip>
 
-The previous approach is valuable and has many potential use cases. However, in situations where the guest is not in the database, we need to explore other ways of identifying them. One possible solution is to dynamically retrieve images and information from external sources, such as browsing the web for details.
+이전 방식도 유용하지만, 데이터베이스에 손님이 없는 경우에는 외부에서 이미지를 동적으로 검색해야 할 수 있습니다. 예를 들어, 웹을 탐색하며 손님에 대한 이미지를 찾아 신원을 확인하는 방식입니다.
 
-In this approach, images are dynamically added to the agent's memory during execution. As we know, agents in `smolagents` are based on the `MultiStepAgent` class, which is an abstraction of the ReAct framework. This class operates in a structured cycle where various variables and knowledge are logged at different stages:
+이 방식에서는 에이전트 실행 중에 이미지를 동적으로 메모리에 추가합니다. smolagents의 에이전트는 `MultiStepAgent` 클래스를 기반으로 하며, 이는 ReAct 프레임워크의 추상화입니다. 이 클래스는 다양한 변수와 지식을 여러 단계에 걸쳐 기록하는 구조적 사이클로 동작합니다:
 
-1. **SystemPromptStep:** Stores the system prompt.
-2. **TaskStep:** Logs the user query and any provided input.
-3. **ActionStep:** Captures logs from the agent's actions and results.
+1. **SystemPromptStep:** 시스템 프롬프트 저장
+2. **TaskStep:** 사용자 쿼리 및 입력 기록
+3. **ActionStep:** 에이전트의 액션 및 결과 로그 기록
 
-This structured approach allows agents to incorporate visual information dynamically and respond adaptively to evolving tasks. Below is the diagram we've already seen, illustrating the dynamic workflow process and how different steps integrate within the agent lifecycle. When browsing, the agent can take screenshots and save them as `observation_images` in the `ActionStep`.
+이 구조적 접근법 덕분에, 에이전트는 시각 정보를 동적으로 통합하고, 변화하는 작업에 적응적으로 대응할 수 있습니다. 아래 다이어그램은 이러한 동적 워크플로우와 각 단계가 에이전트 라이프사이클에서 어떻게 통합되는지 보여줍니다. 브라우징 중에는 에이전트가 스크린샷을 찍어 `observation_images`에 저장할 수 있습니다.
 
 ![Dynamic image retrieval](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/smolagents-can-see/diagram_adding_vlms_smolagents.png)
 
-Now that we understand the need, let's build our complete example. In this case, Alfred wants full control over the guest verification process, so browsing for details becomes a viable solution. To complete this example, we need a new set of tools for the agent. Additionally, we'll use Selenium and Helium, which are browser automation tools. This will allow us to build an agent that explores the web, searching for details about a potential guest and retrieving verification information. Let's install the tools needed:
+이제 필요성을 이해했으니, 전체 예시를 만들어봅시다. 이번에는 Alfred가 손님 신원 확인 과정을 완전히 통제하고 싶어 하므로, 웹을 탐색하며 정보를 찾는 것이 적합합니다. 이를 위해 Selenium과 Helium 등 브라우저 자동화 도구가 필요합니다. 아래 명령어로 필요한 패키지를 설치하세요:
 
 ```bash
 pip install "smolagents[all]" helium selenium python-dotenv
 ```
 
-We'll need a set of agent tools specifically designed for browsing, such as `search_item_ctrl_f`, `go_back`, and `close_popups`. These tools allow the agent to act like a person navigating the web.
+에이전트에는 웹 브라우징을 위한 `search_item_ctrl_f`, `go_back`, `close_popups` 등 도구가 필요합니다. 이 도구들은 실제 사용자가 웹을 탐색하는 것처럼 동작하게 해줍니다.
 
 ```python
 @tool
 def search_item_ctrl_f(text: str, nth_result: int = 1) -> str:
     """
-    Searches for text on the current page via Ctrl + F and jumps to the nth occurrence.
+    현재 페이지에서 Ctrl + F로 텍스트를 검색하고 n번째 결과로 이동합니다.
     Args:
-        text: The text to search for
-        nth_result: Which occurrence to jump to (default: 1)
+        text: 검색할 텍스트
+        nth_result: 몇 번째 결과로 이동할지(기본값: 1)
     """
     elements = driver.find_elements(By.XPATH, f"//*[contains(text(), '{text}')]")
     if nth_result > len(elements):
-        raise Exception(f"Match n°{nth_result} not found (only {len(elements)} matches found)")
-    result = f"Found {len(elements)} matches for '{text}'."
+        raise Exception(f"{nth_result}번째 결과를 찾을 수 없습니다. (총 {len(elements)}개 일치)")
+    result = f"'{text}'에 대해 {len(elements)}개 일치."
     elem = elements[nth_result - 1]
     driver.execute_script("arguments[0].scrollIntoView(true);", elem)
-    result += f"Focused on element {nth_result} of {len(elements)}"
+    result += f"{len(elements)}개 중 {nth_result}번째 요소로 포커스 이동"
     return result
 
 
 @tool
 def go_back() -> None:
-    """Goes back to previous page."""
+    """이전 페이지로 이동합니다."""
     driver.back()
 
 
 @tool
 def close_popups() -> str:
     """
-    Closes any visible modal or pop-up on the page. Use this to dismiss pop-up windows! This does not work on cookie consent banners.
+    페이지의 모달 또는 팝업을 닫습니다. 팝업 창을 닫을 때 사용하세요! 쿠키 배너에는 동작하지 않습니다.
     """
     webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
 ```
 
-We also need functionality for saving screenshots, as this will be an essential part of what our VLM agent uses to complete the task. This functionality captures the screenshot and saves it in `step_log.observations_images = [image.copy()]`, allowing the agent to store and process the images dynamically as it navigates.
+또한, 스크린샷 저장 기능도 필요합니다. 이 기능은 브라우저의 스크린샷을 찍어 `step_log.observations_images = [image.copy()]`에 저장합니다. 이를 통해 에이전트가 탐색 중 이미지를 동적으로 저장하고 활용할 수 있습니다.
 
 ```python
 def save_screenshot(step_log: ActionStep, agent: CodeAgent) -> None:
-    sleep(1.0)  # Let JavaScript animations happen before taking the screenshot
+    sleep(1.0)  # 자바스크립트 애니메이션 대기
     driver = helium.get_driver()
     current_step = step_log.step_number
     if driver is not None:
-        for step_logs in agent.logs:  # Remove previous screenshots from logs for lean processing
+        for step_logs in agent.logs:  # 이전 스크린샷 정리
             if isinstance(step_log, ActionStep) and step_log.step_number <= current_step - 2:
                 step_logs.observations_images = None
         png_bytes = driver.get_screenshot_as_png()
         image = Image.open(BytesIO(png_bytes))
-        print(f"Captured a browser screenshot: {image.size} pixels")
-        step_log.observations_images = [image.copy()]  # Create a copy to ensure it persists, important!
+        print(f"브라우저 스크린샷 캡처: {image.size} 픽셀")
+        step_log.observations_images = [image.copy()]
 
-    # Update observations with current URL
-    url_info = f"Current url: {driver.current_url}"
+    # 현재 URL 정보 업데이트
+    url_info = f"현재 url: {driver.current_url}"
     step_log.observations = url_info if step_logs.observations is None else step_log.observations + "\n" + url_info
     return
 ```
 
-This function is passed to the agent as `step_callback`, as it's triggered at the end of each step during the agent's execution. This allows the agent to dynamically capture and store screenshots throughout its process.
+이 함수는 `step_callback`으로 에이전트에 전달되어, 각 단계가 끝날 때마다 실행됩니다. 이를 통해 에이전트는 탐색 과정에서 스크린샷을 동적으로 저장할 수 있습니다.
 
-Now, we can generate our vision agent for browsing the web, providing it with the tools we created, along with the `DuckDuckGoSearchTool` to explore the web. This tool will help the agent retrieve necessary information for verifying guests' identities based on visual cues.
+이제, 브라우저를 탐색하며 시각 정보를 활용하는 비전 에이전트를 만들어봅시다. 앞서 만든 도구들과 `DuckDuckGoSearchTool`을 함께 사용합니다. 이 도구는 손님 신원 확인에 필요한 정보를 웹에서 검색하는 데 도움을 줍니다.
 
 ```python
 from smolagents import CodeAgent, OpenAIServerModel, DuckDuckGoSearchTool
@@ -192,33 +192,33 @@ agent = CodeAgent(
 )
 ```
 
-With that, Alfred is ready to check the guests' identities and make informed decisions about whether to let them into the party:
+이제 Alfred는 손님 신원 확인을 위해 다음과 같이 에이전트를 실행할 수 있습니다:
 
 ```python
 agent.run("""
-I am Alfred, the butler of Wayne Manor, responsible for verifying the identity of guests at party. A superhero has arrived at the entrance claiming to be Wonder Woman, but I need to confirm if she is who she says she is.
+나는 Wayne Manor의 집사 Alfred로, 파티에 참석하는 손님의 신원을 확인하는 임무를 맡고 있습니다. 한 슈퍼히어로가 Wonder Woman이라고 주장하며 입장하려고 하는데, 정말 그녀가 맞는지 확인해야 합니다.
 
-Please search for images of Wonder Woman and generate a detailed visual description based on those images. Additionally, navigate to Wikipedia to gather key details about her appearance. With this information, I can determine whether to grant her access to the event.
+Wonder Woman의 이미지를 검색해 시각적 특징을 자세히 설명해 주세요. 또한, Wikipedia에서 그녀의 외모에 대한 주요 정보를 찾아주세요. 이 정보를 바탕으로 입장 허가 여부를 결정하겠습니다.
 """ + helium_instructions)
 ```
 
-You can see that we include `helium_instructions` as part of the task. This special prompt is aimed to control the navigation of the agent, ensuring that it follows the correct steps while browsing the web.
+여기서 `helium_instructions`는 탐색을 제어하는 특수 프롬프트로, 에이전트가 올바른 순서로 웹을 탐색하도록 유도합니다.
 
-Let's see how this works in the video below:
+아래 영상에서 실제 동작을 확인할 수 있습니다:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/rObJel7-OLc?si=TnNwQ8rqXqun_pqE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-This is the final output:
+최종 출력 예시는 다음과 같습니다:
 
 ```python
-Final answer: Wonder Woman is typically depicted wearing a red and gold bustier, blue shorts or skirt with white stars, a golden tiara, silver bracelets, and a golden Lasso of Truth. She is Princess Diana of Themyscira, known as Diana Prince in the world of men.
+Final answer: Wonder Woman은 일반적으로 빨간색과 금색의 상의, 파란색 별무늬 하의, 금색 티아라, 은색 팔찌, 황금 올가미를 착용한 모습으로 묘사됩니다. 그녀는 Themyscira의 공주이자, 인간 세계에서는 Diana Prince로 알려져 있습니다.
 ```
 
-With all of that, we've successfully created our identity verifier for the party! Alfred now has the necessary tools to ensure only the right guests make it through the door. Everything is set to have a good time at Wayne Manor!
+이렇게 해서, 파티 입장 손님 신원 확인을 위한 비전 에이전트를 완성했습니다! 이제 Alfred는 올바른 손님만 입장할 수 있도록 완벽하게 준비할 수 있습니다. Wayne Manor에서 멋진 파티를 즐기세요!
 
 
-## Further Reading
+## 추가 자료
 
-- [We just gave sight to smolagents](https://huggingface.co/blog/smolagents-can-see) - Blog describing the vision agent functionality.
-- [Web Browser Automation with Agents 🤖🌐](https://huggingface.co/docs/smolagents/examples/web_browser) - Example for Web browsing using a vision agent.
-- [Web Browser Vision Agent Example](https://github.com/huggingface/smolagents/blob/main/src/smolagents/vision_web_browser.py) - Example for Web browsing using a vision agent.
+- [We just gave sight to smolagents](https://huggingface.co/blog/smolagents-can-see) - 비전 에이전트 기능을 소개하는 블로그
+- [Web Browser Automation with Agents 🤖🌐](https://huggingface.co/docs/smolagents/examples/web_browser) - 웹 브라우저를 활용한 에이전트 예시
+- [Web Browser Vision Agent Example](https://github.com/huggingface/smolagents/blob/main/src/smolagents/vision_web_browser.py) - 웹 브라우저 비전 에이전트 예시

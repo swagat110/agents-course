@@ -5,15 +5,15 @@
 ]}
 askForHelpUrl="http://hf.co/join/discord" />
 
-# Writing actions as code snippets or JSON blobs
+# 액션을 코드 스니펫 또는 JSON 블롭으로 작성하기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/tool_calling_agents.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+코드는 <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/tool_calling_agents.ipynb" target="_blank">이 노트북</a>에서 따라할 수 있습니다. Google Colab에서 실행할 수 있습니다.
 </Tip>
 
-Tool Calling Agents are the second type of agent available in `smolagents`. Unlike Code Agents that use Python snippets, these agents **use the built-in tool-calling capabilities of LLM providers** to generate tool calls as **JSON structures**. This is the standard approach used by OpenAI, Anthropic, and many other providers.
+Tool Calling Agent는 `smolagents`에서 제공하는 두 번째 유형의 에이전트입니다. Python 코드를 실행하는 CodeAgent와 달리, **Tool Calling Agent는 LLM 제공업체의 내장 툴 콜링 기능**을 활용해 **JSON 구조**로 툴 호출을 생성합니다. 이는 OpenAI, Anthropic 등 많은 제공업체에서 사용하는 표준 방식입니다.
 
-Let's look at an example. When Alfred wants to search for catering services and party ideas, a `CodeAgent` would generate and run Python code like this:
+예를 들어, Alfred가 케이터링 서비스와 파티 아이디어를 검색하고 싶을 때, `CodeAgent`는 다음과 같이 Python 코드를 생성해 실행합니다:
 
 ```python
 for query in [
@@ -23,7 +23,7 @@ for query in [
     print(web_search(f"Search for: {query}"))
 ```
 
-A `ToolCallingAgent` would instead create a JSON structure:
+`ToolCallingAgent`는 대신 JSON 구조를 생성합니다:
 
 ```python
 [
@@ -32,21 +32,21 @@ A `ToolCallingAgent` would instead create a JSON structure:
 ]
 ```
 
-This JSON blob is then used to execute the tool calls.
+이 JSON 블롭이 시스템에 전달되어 툴 호출이 실행됩니다.
 
-While `smolagents` primarily focuses on `CodeAgents` since [they perform better overall](https://huggingface.co/papers/2402.01030), `ToolCallingAgents` can be effective for simple systems that don't require variable handling or complex tool calls.
+`smolagents`는 [CodeAgent가 전반적으로 더 좋은 성능을 보이기 때문에](https://huggingface.co/papers/2402.01030) 주로 CodeAgent에 초점을 맞추지만, ToolCallingAgent는 변수 처리나 복잡한 툴 호출이 필요 없는 간단한 시스템에 효과적입니다.
 
 ![Code vs JSON Actions](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/code_vs_json_actions.png)  
 
-## How Do Tool Calling Agents Work?  
+## Tool Calling Agent는 어떻게 동작하나요?  
 
-Tool Calling Agents follow the same multi-step workflow as Code Agents (see the [previous section](./code_agents) for details). 
+Tool Calling Agent는 CodeAgent와 동일한 다단계 워크플로우를 따릅니다([이전 섹션](./code_agents) 참고). 
 
-The key difference is in **how they structure their actions**: instead of executable code, they **generate JSON objects that specify tool names and arguments**. The system then **parses these instructions** to execute the appropriate tools.
+핵심 차이점은 **액션을 구조화하는 방식**입니다. ToolCallingAgent는 실행 가능한 코드 대신, **툴 이름과 인자를 명시한 JSON 객체**를 생성합니다. 시스템은 이 명령을 파싱해 적절한 툴을 실행합니다.
 
-## Example: Running a Tool Calling Agent  
+## 예시: Tool Calling Agent 실행하기  
 
-Let's revisit the previous example where Alfred started party preparations, but this time we'll use a `ToolCallingAgent` to highlight the difference. We'll build an agent that can search the web using DuckDuckGo, just like in our Code Agent example. The only difference is the agent type - the framework handles everything else:
+앞서 Alfred가 파티 준비를 시작했던 예시를 ToolCallingAgent로 다시 구현해보겠습니다. DuckDuckGo를 활용해 웹을 검색하는 에이전트를 만들지만, 에이전트 타입만 다르고 나머지는 프레임워크가 처리합니다:
 
 ```python
 from smolagents import ToolCallingAgent, DuckDuckGoSearchTool, InferenceClientModel
@@ -56,19 +56,19 @@ agent = ToolCallingAgent(tools=[DuckDuckGoSearchTool()], model=InferenceClientMo
 agent.run("Search for the best music recommendations for a party at the Wayne's mansion.")
 ```
 
-When you examine the agent's trace, instead of seeing `Executing parsed code:`, you'll see something like:
+에이전트의 실행 로그를 보면, `Executing parsed code:` 대신 다음과 같은 메시지가 출력됩니다:
 
 ```text
 ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ Calling tool: 'web_search' with arguments: {'query': "best music recommendations for a party at Wayne's         │
 │ mansion"}                                                                                                       │
 ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```  
+```
 
-The agent generates a structured tool call that the system processes to produce the output, rather than directly executing code like a `CodeAgent`.
+에이전트는 구조화된 툴 호출을 생성하고, 시스템이 이를 처리해 결과를 반환합니다. CodeAgent처럼 코드를 직접 실행하지 않습니다.
 
-Now that we understand both agent types, we can choose the right one for our needs. Let's continue exploring `smolagents` to make Alfred's party a success! 🎉
+이제 두 에이전트 타입의 차이를 이해했으니, 필요에 따라 적합한 방식을 선택할 수 있습니다. Alfred의 파티 준비를 계속 이어가봅시다! 🎉
 
-## Resources
+## 참고 자료
 
-- [ToolCallingAgent documentation](https://huggingface.co/docs/smolagents/v1.8.1/en/reference/agents#smolagents.ToolCallingAgent) - Official documentation for ToolCallingAgent
+- [ToolCallingAgent 공식 문서](https://huggingface.co/docs/smolagents/v1.8.1/en/reference/agents#smolagents.ToolCallingAgent) - ToolCallingAgent에 대한 공식 문서

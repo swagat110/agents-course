@@ -5,39 +5,39 @@
 ]}
 askForHelpUrl="http://hf.co/join/discord" />
 
-# Building Agentic RAG Systems
+# 에이전틱 RAG 시스템 구축하기
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/retrieval_agents.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+코드는 <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/retrieval_agents.ipynb" target="_blank">이 노트북</a>에서 따라할 수 있습니다. Google Colab에서 실행할 수 있습니다.
 </Tip>
 
-Retrieval Augmented Generation (RAG) systems combine the capabilities of data retrieval and generation models to provide context-aware responses. For example, a user's query is passed to a search engine, and the retrieved results are given to the model along with the query. The model then generates a response based on the query and retrieved information.
+Retrieval Augmented Generation(RAG) 시스템은 데이터 검색과 생성 모델의 능력을 결합하여 상황에 맞는 답변을 제공합니다. 예를 들어, 사용자의 질문이 검색 엔진에 전달되고, 검색된 결과가 질문과 함께 모델에 제공됩니다. 모델은 질문과 검색된 정보를 바탕으로 답변을 생성합니다.
 
-Agentic RAG (Retrieval-Augmented Generation) extends traditional RAG systems by **combining autonomous agents with dynamic knowledge retrieval**. 
+에이전틱 RAG(검색 증강 생성)는 **자율 에이전트와 동적 지식 검색**을 결합하여 기존 RAG 시스템을 확장합니다.
 
-While traditional RAG systems use an LLM to answer queries based on retrieved data, agentic RAG **enables intelligent control of both retrieval and generation processes**, improving efficiency and accuracy.
+기존 RAG 시스템은 LLM이 검색된 데이터를 바탕으로 답변을 생성하지만, 에이전틱 RAG는 **검색과 생성 과정을 지능적으로 제어**하여 효율성과 정확성을 높입니다.
 
-Traditional RAG systems face key limitations, such as **relying on a single retrieval step** and focusing on direct semantic similarity with the user’s query, which may overlook relevant information. 
+기존 RAG 시스템의 주요 한계는 **단일 검색 단계에 의존**하고, 사용자의 질문과 직접적인 의미적 유사성에만 집중하여 관련 정보를 놓칠 수 있다는 점입니다.
 
-Agentic RAG addresses these issues by allowing the agent to autonomously formulate search queries, critique retrieved results, and conduct multiple retrieval steps for a more tailored and comprehensive output.
+에이전틱 RAG는 에이전트가 검색 쿼리를 자율적으로 생성하고, 검색 결과를 비판적으로 평가하며, 여러 번의 검색 단계를 거쳐 더 맞춤화되고 포괄적인 출력을 생성할 수 있도록 합니다.
 
-## Basic Retrieval with DuckDuckGo
+## DuckDuckGo를 활용한 기본 검색
 
-Let's build a simple agent that can search the web using DuckDuckGo. This agent will retrieve information and synthesize responses to answer queries. With Agentic RAG, Alfred's agent can:
+이제 DuckDuckGo를 사용해 웹을 검색하는 간단한 에이전트를 만들어봅시다. 이 에이전트는 정보를 검색하고, 답변을 종합하여 질문에 답합니다. 에이전틱 RAG를 활용하면 Alfred의 에이전트는 다음과 같은 일을 할 수 있습니다:
 
-* Search for latest superhero party trends
-* Refine results to include luxury elements
-* Synthesize information into a complete plan
+* 최신 슈퍼히어로 파티 트렌드 검색
+* 결과를 고급스러운 요소로 세분화
+* 정보를 종합하여 완성된 계획 제안
 
-Here's how Alfred's agent can achieve this:
+Alfred의 에이전트가 이를 어떻게 수행하는지 살펴봅시다:
 
 ```python
 from smolagents import CodeAgent, DuckDuckGoSearchTool, InferenceClientModel
 
-# Initialize the search tool
+# 검색 도구 초기화
 search_tool = DuckDuckGoSearchTool()
 
-# Initialize the model
+# 모델 초기화
 model = InferenceClientModel()
 
 agent = CodeAgent(
@@ -45,29 +45,29 @@ agent = CodeAgent(
     tools=[search_tool],
 )
 
-# Example usage
+# 예시 사용법
 response = agent.run(
     "Search for luxury superhero-themed party ideas, including decorations, entertainment, and catering."
 )
 print(response)
 ```
 
-The agent follows this process:
+에이전트의 동작 과정:
 
-1. **Analyzes the Request:** Alfred’s agent identifies the key elements of the query—luxury superhero-themed party planning, with focus on decor, entertainment, and catering.
-2. **Performs Retrieval:**  The agent leverages DuckDuckGo to search for the most relevant and up-to-date information, ensuring it aligns with Alfred’s refined preferences for a luxurious event.
-3. **Synthesizes Information:** After gathering the results, the agent processes them into a cohesive, actionable plan for Alfred, covering all aspects of the party.
-4. **Stores for Future Reference:** The agent stores the retrieved information for easy access when planning future events, optimizing efficiency in subsequent tasks.
+1. **요청 분석:** Alfred의 에이전트는 쿼리의 핵심 요소(고급 슈퍼히어로 테마 파티, 장식, 엔터테인먼트, 케이터링 등)를 파악합니다.
+2. **검색 수행:** DuckDuckGo를 활용해 Alfred의 고급스러운 취향에 맞는 최신 정보를 검색합니다.
+3. **정보 종합:** 검색 결과를 바탕으로 파티의 모든 측면을 아우르는 실행 가능한 계획을 만듭니다.
+4. **정보 저장:** 검색된 정보를 저장해, 이후 파티 준비 시 효율적으로 재활용할 수 있습니다.
 
-## Custom Knowledge Base Tool
+## 맞춤형 지식 베이스 도구
 
-For specialized tasks, a custom knowledge base can be invaluable. Let's create a tool that queries a vector database of technical documentation or specialized knowledge. Using semantic search, the agent can find the most relevant information for Alfred's needs.
+특정 작업에는 맞춤형 지식 베이스가 매우 유용합니다. 벡터 데이터베이스에 저장된 기술 문서나 전문 지식을 쿼리하는 도구를 만들어봅시다. 의미적 검색을 통해 Alfred의 요구에 가장 적합한 정보를 찾을 수 있습니다.
 
-A vector database stores numerical representations (embeddings) of text or other data, created by machine learning models. It enables semantic search by identifying similar meanings in high-dimensional space.
+벡터 데이터베이스는 텍스트나 기타 데이터를 머신러닝 모델로 임베딩(숫자 벡터)하여 저장합니다. 이를 통해 의미적으로 유사한 정보를 고차원 공간에서 찾을 수 있습니다.
 
-This approach combines predefined knowledge with semantic search to provide context-aware solutions for event planning. With specialized knowledge access, Alfred can perfect every detail of the party.
+이 접근법은 사전 정의된 지식과 의미적 검색을 결합해 상황에 맞는 솔루션을 제공합니다. Alfred는 전문 지식에 접근해 파티의 모든 세부 사항을 완벽하게 준비할 수 있습니다.
 
-In this example, we'll create a tool that retrieves party planning ideas from a custom knowledge base. We'll use a BM25 retriever to search the knowledge base and return the top results, and `RecursiveCharacterTextSplitter` to split the documents into smaller chunks for more efficient search.
+아래 예시에서는 BM25 검색기를 사용해 맞춤형 지식 베이스에서 파티 아이디어를 검색하는 도구를 만듭니다. `RecursiveCharacterTextSplitter`로 문서를 작은 청크로 나눠 검색 효율을 높입니다.
 
 ```python
 from langchain.docstore.document import Document
@@ -78,11 +78,11 @@ from smolagents import CodeAgent, InferenceClientModel
 
 class PartyPlanningRetrieverTool(Tool):
     name = "party_planning_retriever"
-    description = "Uses semantic search to retrieve relevant party planning ideas for Alfred’s superhero-themed party at Wayne Manor."
+    description = "Alfred의 슈퍼히어로 테마 파티를 위한 아이디어를 의미적 검색으로 찾아줍니다."
     inputs = {
         "query": {
             "type": "string",
-            "description": "The query to perform. This should be a query related to party planning or superhero themes.",
+            "description": "파티 준비나 슈퍼히어로 테마와 관련된 쿼리입니다.",
         }
     }
     output_type = "string"
@@ -90,29 +90,29 @@ class PartyPlanningRetrieverTool(Tool):
     def __init__(self, docs, **kwargs):
         super().__init__(**kwargs)
         self.retriever = BM25Retriever.from_documents(
-            docs, k=5  # Retrieve the top 5 documents
+            docs, k=5  # 상위 5개 문서 검색
         )
 
     def forward(self, query: str) -> str:
-        assert isinstance(query, str), "Your search query must be a string"
+        assert isinstance(query, str), "검색 쿼리는 문자열이어야 합니다."
 
         docs = self.retriever.invoke(
             query,
         )
-        return "\nRetrieved ideas:\n" + "".join(
+        return "\n검색된 아이디어:\n" + "".join(
             [
-                f"\n\n===== Idea {str(i)} =====\n" + doc.page_content
+                f"\n\n===== 아이디어 {str(i)} =====\n" + doc.page_content
                 for i, doc in enumerate(docs)
             ]
         )
 
-# Simulate a knowledge base about party planning
+# 파티 준비에 관한 지식 베이스 예시
 party_ideas = [
-    {"text": "A superhero-themed masquerade ball with luxury decor, including gold accents and velvet curtains.", "source": "Party Ideas 1"},
-    {"text": "Hire a professional DJ who can play themed music for superheroes like Batman and Wonder Woman.", "source": "Entertainment Ideas"},
-    {"text": "For catering, serve dishes named after superheroes, like 'The Hulk's Green Smoothie' and 'Iron Man's Power Steak.'", "source": "Catering Ideas"},
-    {"text": "Decorate with iconic superhero logos and projections of Gotham and other superhero cities around the venue.", "source": "Decoration Ideas"},
-    {"text": "Interactive experiences with VR where guests can engage in superhero simulations or compete in themed games.", "source": "Entertainment Ideas"}
+    {"text": "고급 장식(금색 장식, 벨벳 커튼 등)이 있는 슈퍼히어로 테마 가면무도회.", "source": "Party Ideas 1"},
+    {"text": "배트맨, 원더우먼 등 슈퍼히어로 테마 음악을 연주할 전문 DJ 고용.", "source": "Entertainment Ideas"},
+    {"text": "케이터링 메뉴에 슈퍼히어로 이름을 붙인 요리 제공(예: '헐크의 그린 스무디', '아이언맨의 파워 스테이크').", "source": "Catering Ideas"},
+    {"text": "장소 곳곳에 슈퍼히어로 로고와 고담 등 도시 프로젝션 장식.", "source": "Decoration Ideas"},
+    {"text": "VR을 활용한 슈퍼히어로 시뮬레이션, 테마 게임 등 인터랙티브 체험 제공.", "source": "Entertainment Ideas"}
 ]
 
 source_docs = [
@@ -120,7 +120,7 @@ source_docs = [
     for doc in party_ideas
 ]
 
-# Split the documents into smaller chunks for more efficient search
+# 문서를 작은 청크로 분할
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=500,
     chunk_overlap=50,
@@ -130,13 +130,13 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 docs_processed = text_splitter.split_documents(source_docs)
 
-# Create the retriever tool
+# 검색 도구 생성
 party_planning_retriever = PartyPlanningRetrieverTool(docs_processed)
 
-# Initialize the agent
+# 에이전트 초기화
 agent = CodeAgent(tools=[party_planning_retriever], model=InferenceClientModel())
 
-# Example usage
+# 예시 사용법
 response = agent.run(
     "Find ideas for a luxury superhero-themed party, including entertainment, catering, and decoration options."
 )
@@ -144,25 +144,25 @@ response = agent.run(
 print(response)
 ```
 
-This enhanced agent can:
-1. First check the documentation for relevant information
-2. Combine insights from the knowledge base
-3. Maintain conversation context in memory
+이 향상된 에이전트는 다음을 수행할 수 있습니다:
+1. 먼저 문서에서 관련 정보 검색
+2. 지식 베이스의 인사이트 결합
+3. 대화 맥락을 메모리에 유지
 
-## Enhanced Retrieval Capabilities
+## 고도화된 검색 기능
 
-When building agentic RAG systems, the agent can employ sophisticated strategies like:
+에이전틱 RAG 시스템을 구축할 때, 에이전트는 다음과 같은 고급 전략을 사용할 수 있습니다:
 
-1. **Query Reformulation:** Instead of using the raw user query, the agent can craft optimized search terms that better match the target documents
-2. **Query Decomposition:** Instead of using the user query directly, if it contains multiple pieces of information to query, it can be decomposed to multiple queries
-3. **Query Expansion:** Somehow similar to Query Reformulation but done multiple times to put the query in multiple wordings to query them all
-4. **Reranking:** Using Cross-Encoders to assign more comprehensive and semantic relevance scores between retrieved documents and search query
-5. **Multi-Step Retrieval:** The agent can perform multiple searches, using initial results to inform subsequent queries
-6. **Source Integration:** Information can be combined from multiple sources like web search and local documentation
-7. **Result Validation:** Retrieved content can be analyzed for relevance and accuracy before being included in responses
+1. **쿼리 재구성(Query Reformulation):** 원본 쿼리 대신, 문서에 더 잘 맞는 최적화된 검색어 생성
+2. **쿼리 분해(Query Decomposition):** 여러 정보를 포함한 쿼리를 분해해 각각 검색
+3. **쿼리 확장(Query Expansion):** 쿼리를 다양한 표현으로 확장해 여러 방식으로 검색
+4. **재정렬(Reranking):** Cross-Encoder 등으로 검색 결과와 쿼리의 의미적 관련성 점수 부여
+5. **다단계 검색(Multi-Step Retrieval):** 초기 결과를 바탕으로 추가 검색 반복
+6. **소스 통합(Source Integration):** 웹 검색, 로컬 문서 등 다양한 소스 결합
+7. **결과 검증(Result Validation):** 검색된 내용의 적합성과 정확성 평가 후 답변에 포함
 
-Effective agentic RAG systems require careful consideration of several key aspects. The agent **should select between available tools based on the query type and context**. Memory systems help maintain conversation history and avoid repetitive retrievals. Having fallback strategies ensures the system can still provide value even when primary retrieval methods fail. Additionally, implementing validation steps helps ensure the accuracy and relevance of retrieved information.
+효과적인 에이전틱 RAG 시스템을 위해서는 여러 측면을 신중히 고려해야 합니다. 에이전트는 **쿼리 유형과 맥락에 따라 적절한 도구를 선택**해야 하며, 메모리 시스템을 통해 대화 이력을 관리하고 중복 검색을 방지해야 합니다. 또한, 예비 전략을 마련해 주요 검색 방법이 실패해도 가치를 제공할 수 있어야 하며, 검증 단계를 통해 검색 결과의 정확성과 적합성을 보장해야 합니다.
 
-## Resources
+## 참고 자료
 
-- [Agentic RAG: turbocharge your RAG with query reformulation and self-query! 🚀](https://huggingface.co/learn/cookbook/agent_rag) - Recipe for developing an Agentic RAG system using smolagents.
+- [Agentic RAG: turbocharge your RAG with query reformulation and self-query! 🚀](https://huggingface.co/learn/cookbook/agent_rag) - smolagents로 에이전틱 RAG 시스템을 개발하는 레시피

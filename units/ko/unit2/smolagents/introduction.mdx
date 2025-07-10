@@ -1,69 +1,67 @@
-# Introduction to `smolagents`
+# `smolagents` 소개
 
 <img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/smolagents/thumbnail.jpg" alt="Unit 2.1 Thumbnail"/>
 
-Welcome to this module, where you'll learn **how to build effective agents** using the [`smolagents`](https://github.com/huggingface/smolagents) library, which provides a lightweight framework for creating capable AI agents.  
+이 모듈에 오신 것을 환영합니다! 여기서는 [`smolagents`](https://github.com/huggingface/smolagents) 라이브러리를 활용해 **효과적인 에이전트 만드는 법**을 배웁니다. `smolagents`는 강력한 AI 에이전트를 손쉽게 만들 수 있도록 도와주는 경량 프레임워크입니다.
 
-`smolagents` is a Hugging Face library; therefore, we would appreciate your support by **starring** the smolagents [`repository`](https://github.com/huggingface/smolagents) :
+`smolagents`는 Hugging Face에서 제공하는 라이브러리입니다. [`저장소`](https://github.com/huggingface/smolagents)에 **별(star)**을 눌러 응원해 주세요!
 <img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/smolagents/star_smolagents.gif" alt="staring smolagents"/>
 
-## Module Overview
+## 모듈 개요
 
-This module provides a comprehensive overview of key concepts and practical strategies for building intelligent agents using `smolagents`. 
+이 모듈에서는 `smolagents`를 활용해 지능형 에이전트를 만드는 데 필요한 핵심 개념과 실전 전략을 폭넓게 다룹니다.
 
-With so many open-source frameworks available, it's essential to understand the components and capabilities that make `smolagents` a useful option or to determine when another solution might be a better fit. 
+수많은 오픈소스 프레임워크가 존재하는 만큼, `smolagents`의 구성 요소와 장단점을 이해하고, 언제 다른 솔루션이 더 적합할지 판단하는 것이 중요합니다.
 
-We'll explore critical agent types, including code agents designed for software development tasks, tool calling agents for creating modular, function-driven workflows, and retrieval agents that access and synthesize information. 
+이 단원에서는 소프트웨어 개발에 특화된 코드 에이전트, 모듈형 워크플로우를 위한 툴 호출 에이전트, 정보를 검색·종합하는 리트리벌 에이전트 등 주요 에이전트 유형을 살펴봅니다.
 
-Additionally, we'll cover the orchestration of multiple agents as well as the integration of vision capabilities and web browsing, which unlock new possibilities for dynamic and context-aware applications.
+또한 여러 에이전트를 조합하는 방법, 비전 기능 및 웹 브라우징 통합 등 동적이고 상황 인식이 가능한 애플리케이션을 만드는 방법도 다룹니다.
 
-In this unit, Alfred, the agent from Unit 1, makes his return. This time, he’s using the `smolagents` framework for his internal workings. Together, we’ll explore the key concepts behind this framework as Alfred tackles various tasks. Alfred is organizing a party at the Wayne Manor while the Wayne family 🦇 is away, and he has plenty to do. Join us as we showcase his journey and how he handles these tasks with `smolagents`!
+이번 단원에서는 1단원에서 만난 에이전트 Alfred가 다시 등장합니다. 이번에는 `smolagents` 프레임워크를 활용해 다양한 작업을 해결합니다. Alfred는 Wayne 저택에서 파티를 준비하며 여러 과제를 해결해야 합니다. Alfred의 여정을 따라가며 `smolagents`의 핵심 개념을 함께 익혀봅시다!
 
 <Tip>
-
-In this unit, you will learn to build AI agents with the `smolagents` library. Your agents will be able to search for data, execute code, and interact with web pages. You will also learn how to combine multiple agents to create more powerful systems.
-
+이 단원에서는 `smolagents` 라이브러리로 AI 에이전트를 만드는 법을 배웁니다. 여러분의 에이전트는 데이터 검색, 코드 실행, 웹페이지 상호작용이 가능하며, 여러 에이전트를 조합해 더 강력한 시스템도 만들 수 있습니다.
 </Tip>
 
 ![Alfred the agent](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit1/this-is-alfred.jpg)
 
-## Contents
+## 목차
 
-During this unit on `smolagents`, we cover:  
+이 단원에서 다루는 내용은 다음과 같습니다:
 
-### 1️⃣ [Why Use smolagents](./why_use_smolagents)
+### 1️⃣ [왜 smolagents를 사용할까](./why_use_smolagents)
 
-`smolagents` is one of the many open-source agent frameworks available for application development. Alternative options include `LlamaIndex` and `LangGraph`, which are also covered in other modules in this course. `smolagents` offers several key features that might make it a great fit for specific use cases, but we should always consider all options when selecting a framework. We'll explore the advantages and drawbacks of using `smolagents`, helping you make an informed decision based on your project's requirements.
+`smolagents`는 다양한 오픈소스 에이전트 프레임워크 중 하나입니다. 대안으로는 `LlamaIndex`, `LangGraph` 등이 있으며, 이 과정의 다른 모듈에서 다룹니다. `smolagents`는 특정 상황에 적합한 여러 주요 기능을 제공하지만, 프레임워크 선택 시 항상 다양한 옵션을 고려해야 합니다. 이 장에서는 `smolagents`의 장단점을 살펴보고, 프로젝트 요구에 따라 현명하게 선택할 수 있도록 도와줍니다.
 
 ### 2️⃣ [CodeAgents](./code_agents)
 
-`CodeAgents` are the primary type of agent in `smolagents`. Instead of generating JSON or text, these agents produce Python code to perform actions. This module explores their purpose, functionality, and how they work, along with hands-on examples to showcase their capabilities.  
+`CodeAgents`는 `smolagents`의 기본 에이전트 유형입니다. 이들은 JSON이나 텍스트 대신 파이썬 코드를 생성해 작업을 수행합니다. 이 장에서는 CodeAgent의 목적, 동작 방식, 실전 예시를 통해 그 기능을 살펴봅니다.
 
 ### 3️⃣ [ToolCallingAgents](./tool_calling_agents)
 
-`ToolCallingAgents` are the second type of agent supported by `smolagents`. Unlike `CodeAgents`, which generate Python code, these agents rely on JSON/text blobs that the system must parse and interpret to execute actions. This module covers their functionality, their key differences from `CodeAgents`, and it provides an example to illustrate their usage.
+`ToolCallingAgents`는 `smolagents`가 지원하는 두 번째 에이전트 유형입니다. CodeAgent가 파이썬 코드를 생성하는 것과 달리, 이 에이전트는 시스템이 파싱·해석해야 하는 JSON/텍스트 블롭을 생성합니다. 이 장에서는 ToolCallingAgent의 동작 방식, CodeAgent와의 차이점, 사용 예시를 다룹니다.
 
-### 4️⃣ [Tools](./tools)
+### 4️⃣ [도구(Tools)](./tools)
 
-As we saw in Unit 1, tools are functions that an LLM can use within an agentic system, and they act as the essential building blocks for agent behavior. This module covers how to create tools, their structure, and different implementation methods using the `Tool` class or the `@tool` decorator. You'll also learn about the default toolbox, how to share tools with the community, and how to load community-contributed tools for use in your agents.
+1단원에서 살펴본 것처럼, 도구는 LLM이 에이전트 시스템 내에서 사용할 수 있는 함수로, 에이전트 행동의 핵심 빌딩 블록입니다. 이 장에서는 도구 생성법, 구조, `Tool` 클래스와 `@tool` 데코레이터를 활용한 다양한 구현 방법을 다룹니다. 기본 도구 상자, 커뮤니티에 도구 공유, 커뮤니티 도구 불러오기 등도 배웁니다.
 
-### 5️⃣ [Retrieval Agents](./retrieval_agents)
+### 5️⃣ [리트리벌 에이전트(Retrieval Agents)](./retrieval_agents)
 
-Retrieval agents allow models access to knowledge bases, making it possible to search, synthesize, and retrieve information from multiple sources. They leverage vector stores for efficient retrieval and implement **Retrieval-Augmented Generation (RAG)** patterns. These agents are particularly useful for integrating web search with custom knowledge bases while maintaining conversation context through memory systems. This module explores implementation strategies, including fallback mechanisms for robust information retrieval.
+리트리벌 에이전트는 모델이 지식 베이스에 접근할 수 있게 하여, 다양한 소스에서 정보를 검색·종합·추출할 수 있게 합니다. 이들은 벡터 스토어를 활용해 효율적으로 정보를 찾고, **RAG(Retrieval-Augmented Generation)** 패턴을 구현합니다. 웹 검색과 맞춤형 지식 베이스 통합, 대화 맥락 유지 등 다양한 전략을 다룹니다.
 
-### 6️⃣ [Multi-Agent Systems](./multi_agent_systems)
+### 6️⃣ [멀티 에이전트 시스템(Multi-Agent Systems)](./multi_agent_systems)
 
-Orchestrating multiple agents effectively is crucial for building powerful, multi-agent systems. By combining agents with different capabilities—such as a web search agent with a code execution agent—you can create more sophisticated solutions. This module focuses on designing, implementing, and managing multi-agent systems to maximize efficiency and reliability.  
+여러 에이전트를 효과적으로 조율하는 것은 강력한 멀티 에이전트 시스템 구축의 핵심입니다. 웹 검색 에이전트와 코드 실행 에이전트 등 다양한 능력을 가진 에이전트를 조합해 더 정교한 솔루션을 만들 수 있습니다. 이 장에서는 멀티 에이전트 시스템의 설계, 구현, 관리 방법을 다룹니다.
 
-### 7️⃣ [Vision and Browser agents](./vision_agents)
+### 7️⃣ [비전 및 브라우저 에이전트(Vision and Browser agents)](./vision_agents)
 
-Vision agents extend traditional agent capabilities by incorporating **Vision-Language Models (VLMs)**, enabling them to process and interpret visual information. This module explores how to design and integrate VLM-powered agents, unlocking advanced functionalities like image-based reasoning, visual data analysis, and multimodal interactions.  We will also use vision agents to build a browser agent that can browse the web and extract information from it.
+비전 에이전트는 **비전-언어 모델(VLM)**을 통합해 시각 정보를 처리·해석할 수 있습니다. 이 장에서는 VLM 기반 에이전트 설계·통합법, 이미지 기반 추론, 시각 데이터 분석, 멀티모달 상호작용 등을 다룹니다. 또한 비전 에이전트를 활용해 웹을 탐색하고 정보를 추출하는 브라우저 에이전트도 만들어봅니다.
 
-## Resources
+## 참고 자료
 
-- [smolagents Documentation](https://huggingface.co/docs/smolagents) - Official docs for the smolagents library
-- [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) - Research paper on agent architectures
-- [Agent Guidelines](https://huggingface.co/docs/smolagents/tutorials/building_good_agents) - Best practices for building reliable agents
-- [LangGraph Agents](https://langchain-ai.github.io/langgraph/) - Additional examples of agent implementations
-- [Function Calling Guide](https://platform.openai.com/docs/guides/function-calling) - Understanding function calling in LLMs
-- [RAG Best Practices](https://www.pinecone.io/learn/retrieval-augmented-generation/) - Guide to implementing effective RAG
+- [smolagents 공식 문서](https://huggingface.co/docs/smolagents)
+- [효과적인 에이전트 만들기](https://www.anthropic.com/research/building-effective-agents) - 에이전트 아키텍처 연구 논문
+- [에이전트 가이드라인](https://huggingface.co/docs/smolagents/tutorials/building_good_agents) - 신뢰성 높은 에이전트 구축을 위한 베스트 프랙티스
+- [LangGraph Agents](https://langchain-ai.github.io/langgraph/) - 다양한 에이전트 구현 예시
+- [Function Calling Guide](https://platform.openai.com/docs/guides/function-calling) - LLM의 함수 호출 이해하기
+- [RAG 베스트 프랙티스](https://www.pinecone.io/learn/retrieval-augmented-generation/) - 효과적인 RAG 구현 가이드

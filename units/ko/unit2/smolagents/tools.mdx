@@ -5,78 +5,75 @@
 ]} 
 askForHelpUrl="http://hf.co/join/discord" />
 
-# Tools
+# 도구 (Tools)
 
-As we explored in [unit 1](https://huggingface.co/learn/agents-course/unit1/tools), agents use tools to perform various actions. In `smolagents`, tools are treated as **functions that an LLM can call within an agent system**.
+[unit 1](https://huggingface.co/learn/agents-course/unit1/tools)에서 살펴본 것처럼, 에이전트는 다양한 작업을 수행하기 위해 도구를 사용합니다. `smolagents`에서 도구는 **에이전트 시스템 내에서 LLM이 호출할 수 있는 함수**로 취급됩니다.
 
-To interact with a tool, the LLM needs an **interface description** with these key components:
+도구와 상호작용하려면 LLM이 다음과 같은 **인터페이스 설명**을 필요로 합니다:
 
-- **Name**: What the tool is called
-- **Tool description**: What the tool does
-- **Input types and descriptions**: What arguments the tool accepts
-- **Output type**: What the tool returns
+- **이름**: 도구의 이름
+- **도구 설명**: 도구가 수행하는 작업
+- **입력 타입 및 설명**: 도구가 받는 인자
+- **출력 타입**: 도구가 반환하는 값
 
-For instance, while preparing for a party at Wayne Manor, Alfred needs various tools to gather information - from searching for catering services to finding party theme ideas. Here's how a simple search tool interface might look:
+예를 들어, Alfred가 Wayne Manor에서 파티를 준비할 때, 케이터링 서비스 검색부터 파티 테마 아이디어 찾기까지 다양한 정보를 수집해야 합니다. 아래는 간단한 검색 도구 인터페이스 예시입니다:
 
-- **Name:** `web_search`
-- **Tool description:** Searches the web for specific queries
-- **Input:** `query` (string) - The search term to look up
-- **Output:** String containing the search results
+- **이름:** `web_search`
+- **도구 설명:** 특정 쿼리로 웹을 검색합니다
+- **입력:** `query` (string) - 검색어
+- **출력:** 검색 결과가 담긴 문자열
 
-By using these tools, Alfred can make informed decisions and gather all the information needed for planning the perfect party.
+이러한 도구를 사용하면 Alfred는 완벽한 파티 준비를 위해 필요한 모든 정보를 쉽게 모을 수 있습니다.
 
-Below, you can see an animation illustrating how a tool call is managed:
+아래 애니메이션은 도구 호출이 어떻게 관리되는지 보여줍니다:
 
 ![Agentic pipeline from https://huggingface.co/docs/smolagents/conceptual_guides/react](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/Agent_ManimCE.gif)
 
-## Tool Creation Methods
+## 도구 생성 방법
 
-In `smolagents`, tools can be defined in two ways:
-1. **Using the `@tool` decorator** for simple function-based tools
-2. **Creating a subclass of `Tool`** for more complex functionality
+`smolagents`에서 도구는 두 가지 방식으로 정의할 수 있습니다:
+1. **`@tool` 데코레이터**를 사용한 간단한 함수형 도구
+2. **`Tool` 클래스를 상속한 복잡한 도구**
 
-### The `@tool` Decorator
+### `@tool` 데코레이터
 
-The `@tool` decorator is the **recommended way to define simple tools**. Under the hood, smolagents will parse basic information about the function from Python. So if you name your function clearly and write a good docstring, it will be easier for the LLM to use.
+`@tool` 데코레이터는 **간단한 도구를 정의할 때 권장되는 방법**입니다. 내부적으로 smolagents는 함수에서 기본 정보를 파싱합니다. 함수 이름을 명확하게 짓고, 좋은 docstring을 작성하면 LLM이 더 쉽게 사용할 수 있습니다.
 
-Using this approach, we define a function with:
+이 방식에서는 다음을 지켜야 합니다:
+- **명확하고 설명적인 함수명**
+- **입력과 출력에 타입 힌트 사용**
+- **자세한 설명과 Args 섹션**
 
-- **A clear and descriptive function name** that helps the LLM understand its purpose.
-- **Type hints for both inputs and outputs** to ensure proper usage.
-- **A detailed description**, including an `Args:` section where each argument is explicitly described. These descriptions provide valuable context for the LLM, so it's important to write them carefully.
-
-#### Generating a tool that retrieves the highest-rated catering
+#### 고평점 케이터링 도구 예시
 
 <img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/smolagents/alfred-catering.jpg" alt="Alfred Catering"/>
 
 <Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/tools.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
+코드는 <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/tools.ipynb" target="_blank">이 노트북</a>에서 따라할 수 있습니다. Google Colab에서 실행할 수 있습니다.
 </Tip>
 
-Let's imagine that Alfred has already decided on the menu for the party, but now he needs help preparing food for such a large number of guests. To do so, he would like to hire a catering service and needs to identify the highest-rated options available. Alfred can leverage a tool to search for the best catering services in his area.
-
-Below is an example of how Alfred can use the `@tool` decorator to make this happen:
+Alfred가 파티 메뉴를 정했다면, 많은 손님을 위해 케이터링 서비스를 고용해야 합니다. Gotham에서 평점이 가장 높은 케이터링 서비스를 찾는 도구를 만들어봅시다.
 
 ```python
 from smolagents import CodeAgent, InferenceClientModel, tool
 
-# Let's pretend we have a function that fetches the highest-rated catering services.
+# Gotham에서 평점이 가장 높은 케이터링 서비스를 반환하는 함수 예시
 @tool
 def catering_service_tool(query: str) -> str:
     """
-    This tool returns the highest-rated catering service in Gotham City.
+    이 도구는 Gotham City에서 평점이 가장 높은 케이터링 서비스를 반환합니다.
 
     Args:
-        query: A search term for finding catering services.
+        query: 케이터링 서비스를 찾기 위한 검색어
     """
-    # Example list of catering services and their ratings
+    # 예시 케이터링 서비스와 평점
     services = {
         "Gotham Catering Co.": 4.9,
         "Wayne Manor Catering": 4.8,
         "Gotham City Events": 4.7,
     }
 
-    # Find the highest rated catering service (simulating search query filtering)
+    # 평점이 가장 높은 서비스 찾기(검색어 필터링은 생략)
     best_service = max(services, key=services.get)
 
     return best_service
@@ -84,31 +81,29 @@ def catering_service_tool(query: str) -> str:
 
 agent = CodeAgent(tools=[catering_service_tool], model=InferenceClientModel())
 
-# Run the agent to find the best catering service
+# 에이전트 실행 예시
 result = agent.run(
     "Can you give me the name of the highest-rated catering service in Gotham City?"
 )
 
-print(result)   # Output: Gotham Catering Co.
+print(result)   # 출력: Gotham Catering Co.
 ```
 
-### Defining a Tool as a Python Class
+### Python 클래스로 도구 정의하기
 
-This approach involves creating a subclass of [`Tool`](https://huggingface.co/docs/smolagents/v1.8.1/en/reference/tools#smolagents.Tool).  For complex tools, we can implement a class instead of a Python function. The class wraps the function with metadata that helps the LLM understand how to use it effectively. In this class, we define:
+이 방식은 [`Tool`](https://huggingface.co/docs/smolagents/v1.8.1/en/reference/tools#smolagents.Tool) 클래스를 상속해 복잡한 도구를 만드는 방법입니다. 클래스는 함수에 메타데이터를 추가해 LLM이 효과적으로 사용할 수 있도록 도와줍니다. 이 클래스에서는 다음을 정의합니다:
 
-- `name`: The tool's name.
-- `description`: A description used to populate the agent's system prompt.
-- `inputs`: A dictionary with keys `type` and `description`, providing information to help the Python interpreter process inputs.
-- `output_type`: Specifies the expected output type.
-- `forward`: The method containing the inference logic to execute.
+- `name`: 도구 이름
+- `description`: 시스템 프롬프트에 들어갈 설명
+- `inputs`: 입력 타입과 설명이 담긴 딕셔너리
+- `output_type`: 반환 타입
+- `forward`: 실제 동작을 수행하는 메서드
 
-Below, we can see an example of a tool built using `Tool` and how to integrate it within a `CodeAgent`.
+아래는 `Tool`을 상속해 슈퍼히어로 테마 파티 아이디어를 생성하는 도구 예시입니다.
 
-#### Generating a tool to generate ideas about the superhero-themed party
+#### 슈퍼히어로 테마 파티 아이디어 생성 도구
 
-Alfred's party at the mansion is a **superhero-themed event**, but he needs some creative ideas to make it truly special. As a fantastic host, he wants to surprise the guests with a unique theme.
-
-To do this, he can use an agent that generates superhero-themed party ideas based on a given category. This way, Alfred can find the perfect party theme to wow his guests.
+Alfred는 Wayne Manor에서 슈퍼히어로 테마 파티를 준비합니다. 손님들을 놀라게 할 독특한 테마가 필요합니다. 아래 도구는 카테고리에 따라 창의적인 파티 아이디어를 제안합니다.
 
 ```python
 from smolagents import Tool, CodeAgent, InferenceClientModel
@@ -116,13 +111,13 @@ from smolagents import Tool, CodeAgent, InferenceClientModel
 class SuperheroPartyThemeTool(Tool):
     name = "superhero_party_theme_generator"
     description = """
-    This tool suggests creative superhero-themed party ideas based on a category.
-    It returns a unique party theme idea."""
+    이 도구는 카테고리에 따라 창의적인 슈퍼히어로 테마 파티 아이디어를 제안합니다.
+    고유한 파티 테마 아이디어를 반환합니다."""
 
     inputs = {
         "category": {
             "type": "string",
-            "description": "The type of superhero party (e.g., 'classic heroes', 'villain masquerade', 'futuristic Gotham').",
+            "description": "슈퍼히어로 파티 유형(예: 'classic heroes', 'villain masquerade', 'futuristic Gotham')",
         }
     }
 
@@ -130,30 +125,30 @@ class SuperheroPartyThemeTool(Tool):
 
     def forward(self, category: str):
         themes = {
-            "classic heroes": "Justice League Gala: Guests come dressed as their favorite DC heroes with themed cocktails like 'The Kryptonite Punch'.",
-            "villain masquerade": "Gotham Rogues' Ball: A mysterious masquerade where guests dress as classic Batman villains.",
-            "futuristic Gotham": "Neo-Gotham Night: A cyberpunk-style party inspired by Batman Beyond, with neon decorations and futuristic gadgets."
+            "classic heroes": "Justice League Gala: 손님들이 DC 영웅으로 분장하고, 'The Kryptonite Punch' 같은 테마 칵테일 제공.",
+            "villain masquerade": "Gotham Rogues' Ball: 손님들이 배트맨 빌런으로 분장하는 미스터리 가면무도회.",
+            "futuristic Gotham": "Neo-Gotham Night: 배트맨 비욘드에서 영감을 받은 사이버펑크 스타일 파티, 네온 장식과 미래형 소품.",
         }
 
-        return themes.get(category.lower(), "Themed party idea not found. Try 'classic heroes', 'villain masquerade', or 'futuristic Gotham'.")
+        return themes.get(category.lower(), "테마를 찾을 수 없습니다. 'classic heroes', 'villain masquerade', 'futuristic Gotham' 중에서 선택해보세요.")
 
-# Instantiate the tool
+# 도구 인스턴스화
 party_theme_tool = SuperheroPartyThemeTool()
 agent = CodeAgent(tools=[party_theme_tool], model=InferenceClientModel())
 
-# Run the agent to generate a party theme idea
+# 에이전트 실행 예시
 result = agent.run(
     "What would be a good superhero party idea for a 'villain masquerade' theme?"
 )
 
-print(result)  # Output: "Gotham Rogues' Ball: A mysterious masquerade where guests dress as classic Batman villains."
+print(result)  # 출력: "Gotham Rogues' Ball: 손님들이 배트맨 빌런으로 분장하는 미스터리 가면무도회."
 ```
 
-With this tool, Alfred will be the ultimate super host, impressing his guests with a superhero-themed party they won't forget! 🦸‍♂️🦸‍♀️
+이 도구로 Alfred는 슈퍼히어로 테마 파티의 완벽한 호스트가 될 수 있습니다! 🦸‍♂️🦸‍♀️
 
-## Default Toolbox
+## 기본 도구 모음(Default Toolbox)
 
-`smolagents` comes with a set of pre-built tools that can be directly injected into your agent. The [default toolbox](https://huggingface.co/docs/smolagents/guided_tour?build-a-tool=Decorate+a+function+with+%40tool#default-toolbox) includes:
+`smolagents`에는 바로 사용할 수 있는 여러 기본 도구가 포함되어 있습니다. [기본 도구 모음](https://huggingface.co/docs/smolagents/guided_tour?build-a-tool=Decorate+a+function+with+%40tool#default-toolbox)에는 다음이 포함됩니다:
 
 - **PythonInterpreterTool**
 - **FinalAnswerTool**
@@ -162,39 +157,36 @@ With this tool, Alfred will be the ultimate super host, impressing his guests wi
 - **GoogleSearchTool**
 - **VisitWebpageTool**
 
-Alfred could use various tools to ensure a flawless party at Wayne Manor:
+Alfred는 다음과 같이 다양한 도구를 활용해 Wayne Manor에서 완벽한 파티를 준비할 수 있습니다:
 
-- First, he could use the `DuckDuckGoSearchTool` to find creative superhero-themed party ideas.
+- `DuckDuckGoSearchTool`로 창의적인 슈퍼히어로 테마 파티 아이디어 검색
+- `GoogleSearchTool`로 Gotham에서 평점이 가장 높은 케이터링 서비스 찾기
+- `PythonInterpreterTool`로 좌석 배치 계산
+- 모든 정보를 모아 `FinalAnswerTool`로 계획 정리
 
-- For catering, he'd rely on the `GoogleSearchTool` to find the highest-rated services in Gotham.
+이 도구들로 Alfred는 완벽하고 매끄러운 파티를 보장할 수 있습니다. 🦇💡
 
-- To manage seating arrangements, Alfred could run calculations with the `PythonInterpreterTool`.
+## 도구 공유 및 가져오기
 
-- Once everything is gathered, he'd compile the plan using the `FinalAnswerTool`.
+**smolagents**의 강력한 기능 중 하나는 커스텀 도구를 Hub에 공유하고, 커뮤니티에서 만든 도구를 쉽게 가져올 수 있다는 점입니다. 여기에는 **HF Spaces** 및 **LangChain 도구**와의 연동도 포함되어, Alfred가 Wayne Manor에서 잊지 못할 파티를 기획하는 데 큰 도움이 됩니다. 🎭
 
-With these tools, Alfred guarantees the party is both exceptional and seamless. 🦇💡
+이러한 통합을 통해 Alfred는 고급 이벤트 플래닝 도구를 활용할 수 있습니다. 예를 들어, 조명 조정, 파티 음악 추천, 케이터링 업체와의 협업 등 다양한 작업을 자동화할 수 있습니다.
 
-## Sharing and Importing Tools
+아래는 이러한 기능이 파티 경험을 어떻게 향상시키는지 보여주는 예시입니다:
 
-One of the most powerful features of **smolagents** is its ability to share custom tools on the Hub and seamlessly integrate tools created by the community. This includes connecting with **HF Spaces** and **LangChain tools**, significantly enhancing Alfred's ability to orchestrate an unforgettable party at Wayne Manor. 🎭
+### 도구를 Hub에 공유하기
 
-With these integrations, Alfred can tap into advanced event-planning tools—whether it's adjusting the lighting for the perfect ambiance, curating the ideal playlist for the party, or coordinating with Gotham's finest caterers.
+커스텀 도구를 커뮤니티에 공유하는 것은 매우 쉽습니다! `push_to_hub()` 메서드를 사용해 Hugging Face 계정에 업로드하면 됩니다.
 
-Here are examples showcasing how these functionalities can elevate the party experience:
-
-### Sharing a Tool to the Hub
-
-Sharing your custom tool with the community is easy! Simply upload it to your Hugging Face account using the `push_to_hub()` method.
-
-For instance, Alfred can share his `party_theme_tool` to help others find the best catering services in Gotham. Here's how to do it:
+예를 들어, Alfred는 자신의 `party_theme_tool`을 공유해 다른 사람들도 Gotham 최고의 케이터링 서비스를 찾을 수 있도록 도울 수 있습니다:
 
 ```python
 party_theme_tool.push_to_hub("{your_username}/party_theme_tool", token="<YOUR_HUGGINGFACEHUB_API_TOKEN>")
 ```
 
-### Importing a Tool from the Hub
+### Hub에서 도구 가져오기
 
-You can easily import tools created by other users using the `load_tool()` function. For example, Alfred might want to generate a promotional image for the party using AI. Instead of building a tool from scratch, he can leverage a predefined one from the community:
+다른 사용자가 만든 도구를 `load_tool()` 함수로 쉽게 가져올 수 있습니다. 예를 들어, Alfred가 AI로 파티 홍보 이미지를 만들고 싶다면, 커뮤니티에서 미리 만들어진 도구를 활용할 수 있습니다:
 
 ```python
 from smolagents import load_tool, CodeAgent, InferenceClientModel
@@ -212,13 +204,13 @@ agent = CodeAgent(
 agent.run("Generate an image of a luxurious superhero-themed party at Wayne Manor with made-up superheros.")
 ```
 
-### Importing a Hugging Face Space as a Tool
+### HF Space를 도구로 가져오기
 
-You can also import a HF Space as a tool using `Tool.from_space()`. This opens up possibilities for integrating with thousands of spaces from the community for tasks from image generation to data analysis.
+`Tool.from_space()`를 사용해 HF Space를 도구로 가져올 수도 있습니다. 이를 통해 커뮤니티의 수천 개 Space와 연동해 이미지 생성, 데이터 분석 등 다양한 작업을 수행할 수 있습니다.
 
-The tool will connect with the spaces Gradio backend using the `gradio_client`, so make sure to install it via `pip` if you don't have it already.
+이 도구는 `gradio_client`를 통해 Space의 Gradio 백엔드와 연결되므로, 미리 pip로 설치해야 합니다.
 
-For the party, Alfred can use an existing HF Space for the generation of the AI-generated image to be used in the announcement (instead of the pre-built tool we mentioned before). Let's build it!
+파티를 위해 Alfred는 AI로 생성한 이미지를 파티 공지에 활용할 수 있습니다. 아래는 그 예시입니다:
 
 ```python
 from smolagents import CodeAgent, InferenceClientModel, Tool
@@ -239,16 +231,11 @@ agent.run(
 )
 ```
 
-### Importing a LangChain Tool
+### LangChain 도구 가져오기
 
+`LangChain` 프레임워크는 이후 섹션에서 자세히 다룹니다. 여기서는 smolagents 워크플로우에서 LangChain 도구를 재사용할 수 있다는 점만 알아둡시다!
 
-We'll discuss the `LangChain` framework in upcoming sections. For now, we just note that we can reuse LangChain tools in your smolagents workflow!
-
-You can easily load LangChain tools using the `Tool.from_langchain()` method. Alfred, ever the perfectionist, is preparing for a spectacular superhero night at Wayne Manor while the Waynes are away. To make sure every detail exceeds expectations, he taps into LangChain tools to find top-tier entertainment ideas.
-
-By using `Tool.from_langchain()`, Alfred effortlessly adds advanced search functionalities to his smolagent, enabling him to discover exclusive party ideas and services with just a few commands.
-
-Here's how he does it:
+`Tool.from_langchain()` 메서드로 LangChain 도구를 쉽게 불러올 수 있습니다. Alfred는 Wayne Manor에서 최고의 엔터테인먼트 아이디어를 찾기 위해 LangChain 도구를 활용할 수 있습니다.
 
 ```python
 from langchain.agents import load_tools
@@ -261,21 +248,21 @@ agent = CodeAgent(tools=[search_tool], model=model)
 agent.run("Search for luxury entertainment ideas for a superhero-themed event, such as live performances and interactive experiences.")
 ```
 
-### Importing a tool collection from any MCP server
+### MCP 서버에서 도구 모음 가져오기
 
-`smolagents` also allows importing tools from the hundreds of MCP servers available on [glama.ai](https://glama.ai/mcp/servers) or [smithery.ai](https://smithery.ai). If you want to dive deeper about MCP, you can check our [free MCP Course](https://huggingface.co/learn/mcp-course/). 
+`smolagents`는 [glama.ai](https://glama.ai/mcp/servers) 또는 [smithery.ai](https://smithery.ai)에서 제공하는 수백 개 MCP 서버의 도구도 가져올 수 있습니다. MCP에 대해 더 알고 싶다면 [무료 MCP 강의](https://huggingface.co/learn/mcp-course/)를 참고하세요.
 
 <details>
-<summary>Install mcp client</summary>
+<summary>mcp 클라이언트 설치</summary>
 
-We first need to install the `mcp` integration for `smolagents`.
+먼저 `smolagents`의 mcp 통합을 설치해야 합니다.
 
 ```bash
 pip install "smolagents[mcp]"
 ```
 </details>
 
-The MCP servers tools can be loaded in a ToolCollection object as follow:
+MCP 서버의 도구는 ToolCollection 객체로 불러올 수 있습니다:
 
 ```python
 import os
@@ -298,11 +285,11 @@ with ToolCollection.from_mcp(server_parameters, trust_remote_code=True) as tool_
     agent.run("Please find a remedy for hangover.")
 ```
 
-With this setup, Alfred can quickly discover luxurious entertainment options, ensuring Gotham's elite guests have an unforgettable experience. This tool helps him curate the perfect superhero-themed event for Wayne Manor! 🎉
+이렇게 하면 Alfred는 고급 엔터테인먼트 옵션을 빠르게 찾을 수 있어, Gotham의 명사들이 잊지 못할 슈퍼히어로 파티를 즐길 수 있습니다! 🎉
 
-## Resources
+## 참고 자료
 
-- [Tools Tutorial](https://huggingface.co/docs/smolagents/tutorials/tools) - Explore this tutorial to learn how to work with tools effectively.
-- [Tools Documentation](https://huggingface.co/docs/smolagents/v1.8.1/en/reference/tools) - Comprehensive reference documentation on tools.
-- [Tools Guided Tour](https://huggingface.co/docs/smolagents/v1.8.1/en/guided_tour#tools) - A step-by-step guided tour to help you build and utilize tools efficiently.
-- [Building Effective Agents](https://huggingface.co/docs/smolagents/tutorials/building_good_agents) - A detailed guide on best practices for developing reliable and high-performance custom function agents.
+- [Tools Tutorial](https://huggingface.co/docs/smolagents/tutorials/tools) - 도구 사용법을 익힐 수 있는 튜토리얼
+- [Tools Documentation](https://huggingface.co/docs/smolagents/v1.8.1/en/reference/tools) - 도구에 대한 공식 문서
+- [Tools Guided Tour](https://huggingface.co/docs/smolagents/v1.8.1/en/guided_tour#tools) - 도구를 효율적으로 만들고 활용하는 단계별 가이드
+- [Building Effective Agents](https://huggingface.co/docs/smolagents/tutorials/building_good_agents) - 신뢰성 높고 성능 좋은 커스텀 함수 에이전트 개발 가이드
