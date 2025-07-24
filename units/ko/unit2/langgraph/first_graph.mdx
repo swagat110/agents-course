@@ -1,4 +1,4 @@
-# 나만의 첫 LangGraph 만들기
+# 나만의 첫 LangGraph 만들기[[building-your-first-langgraph]]
 
 이제 LangGraph의 구성 요소를 이해했으니, 실제로 적용해보며 첫 번째 기능적 그래프를 만들어봅시다. 여기서는 알프레드의 이메일 처리 시스템을 구현할 것입니다. 알프레드는 다음과 같은 작업을 수행해야 합니다:
 
@@ -13,12 +13,12 @@
 <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/langgraph/mail_sorting.ipynb" target="_blank">이 노트북</a>을 따라가며 Google Colab에서 코드를 실행해볼 수 있습니다.
 </Tip>
 
-## 우리가 만들 워크플로우
+## 우리가 만들 워크플로우[[our-workflow]]
 
 아래와 같은 워크플로우를 구현합니다:
 <img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/LangGraph/first_graph.png" alt="First LangGraph"/>
 
-## 환경 설정
+## 환경 설정[[setting-up-our-environment]]
 
 먼저 필요한 패키지를 설치합니다:
 
@@ -36,7 +36,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 ```
 
-## 1단계: 상태(State) 정의하기
+## 1단계: 상태(State) 정의하기[[step-1-define-our-state]]
 
 이메일 처리 워크플로우에서 알프레드가 추적해야 할 정보를 정의합니다:
 
@@ -63,7 +63,7 @@ class EmailState(TypedDict):
 
 > 💡 **팁:** 상태는 중요한 정보를 모두 담되, 불필요하게 비대해지지 않도록 하세요.
 
-## 2단계: 노드 정의하기
+## 2단계: 노드 정의하기[[step-2-define-our-nodes]]
 
 이제 각 처리 단계를 담당할 함수를 만듭니다:
 
@@ -163,7 +163,7 @@ def notify_mr_hugg(state: EmailState):
     return {}
 ```
 
-## 3단계: 분기 로직 정의하기
+## 3단계: 분기 로직 정의하기[[step-3-define-our-routing-logic]]
 
 분류 후 어떤 경로로 갈지 결정하는 함수를 만듭니다:
 
@@ -178,7 +178,7 @@ def route_email(state: EmailState) -> str:
 
 > 💡 **참고:** 이 라우팅 함수는 LangGraph가 분류 노드 이후 어떤 엣지를 따라갈지 결정할 때 호출됩니다. 반환값은 조건부 엣지 매핑의 키와 일치해야 합니다.
 
-## 4단계: StateGraph 생성 및 엣지 정의
+## 4단계: StateGraph 생성 및 엣지 정의[[step-4-create-the-stategraph-and-define-edges]]
 
 이제 모든 것을 연결합니다:
 
@@ -219,7 +219,7 @@ compiled_graph = email_graph.compile()
 
 LangGraph에서 제공하는 특수한 `END` 노드를 사용합니다. 이는 워크플로우가 완료되는 지점을 나타냅니다.
 
-## 5단계: 어플리케이션 실행하기
+## 5단계: 어플리케이션 실행하기[[step-5-run-the-application]]
 
 정상 메일과 스팸 메일로 그래프를 테스트해봅니다:
 
@@ -261,7 +261,7 @@ spam_result = compiled_graph.invoke({
 })
 ```
 
-## 6단계: Langfuse로 메일 분류 에이전트 관찰하기 📡
+## 6단계: Langfuse로 메일 분류 에이전트 관찰하기 📡[[step-6-inspecting-our-mail-sorting-agent-with-langfuse]]
 
 알프레드는 메일 분류 에이전트를 다듬으면서 디버깅에 지쳐갑니다. 에이전트는 본질적으로 예측 불가능하고 추적이 어렵기 때문입니다. 하지만 궁극의 스팸 감지 에이전트를 만들어 프로덕션에 배포하려면, 향후 모니터링과 분석을 위한 강력한 추적 기능이 필요합니다.
 
@@ -309,7 +309,7 @@ legitimate_result = compiled_graph.invoke(
 
 _[정상 메일 트레이스 공개 링크](https://cloud.langfuse.com/project/cloramnkj0002jz088vzn1ja4/traces/f5d6d72e-20af-4357-b232-af44c3728a7b?timestamp=2025-03-17T10%3A13%3A28.413Z&observation=6997ba69-043f-4f77-9445-700a033afba1)_
 
-## 그래프 시각화
+## 그래프 시각화[[visualizing-our-graph]]
 
 LangGraph는 워크플로우 구조를 시각화하여 이해와 디버깅을 돕습니다:
 
@@ -320,7 +320,7 @@ compiled_graph.get_graph().draw_mermaid_png()
 
 이렇게 하면 노드 간 연결과 조건부 경로를 한눈에 볼 수 있습니다.
 
-## 우리가 만든 것
+## 우리가 만든 것[[what-we've-built]]
 
 우리는 다음과 같은 이메일 처리 워크플로우를 완성했습니다:
 
@@ -331,13 +331,13 @@ compiled_graph.get_graph().draw_mermaid_png()
 
 이처럼 LangGraph를 활용하면 LLM 기반의 복잡한 워크플로우도 명확하고 구조적으로 오케스트레이션할 수 있습니다.
 
-## 핵심 요약
+## 핵심 요약[[key-takeaways]]
 
 - **상태 관리**: 이메일 처리의 모든 측면을 추적할 수 있도록 상태를 정의
 - **노드 구현**: LLM과 상호작용하는 기능적 노드 구현
 - **조건부 분기**: 이메일 분류 결과에 따라 분기 로직 구현
 - **종료 상태**: END 노드로 워크플로우 종료 지점 표시
 
-## 다음 단계
+## 다음 단계[[what's-next]]
 
 다음 섹션에서는 LangGraph의 고급 기능(사람과의 상호작용, 다중 조건 분기 등)을 다룹니다.
