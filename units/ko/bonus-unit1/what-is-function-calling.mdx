@@ -1,22 +1,29 @@
-# What is Function Calling?
+# 함수 호출이란 무엇인가[[what-is-function-calling]]
 
-Function-calling is a **way for an LLM to take actions on its environment**. It was first [introduced in GPT-4](https://openai.com/index/function-calling-and-other-api-updates/), and was later reproduced in other models.
 
-Just like the tools of an Agent, function-calling gives the model the capacity to **take an action on its environment**. However, the function calling capacity **is learned by the model**, and relies **less on prompting than other agents techniques**.
 
-During Unit 1, the Agent **didn't learn to use the Tools**, we just provided the list, and we relied on the fact that the model **was able to generalize on defining a plan using these Tools**. 
+Function-calling은 **LLM이 환경에서 동작을 수행할 수 있는 방법**입니다. 
 
-While here, **with function-calling, the Agent is fine-tuned (trained) to use Tools**.
+처음에는 [GPT-4에서 도입되었으며](https://openai.com/index/function-calling-and-other-api-updates/), 이후 다른 모델에서도 구현되었습니다.
+에이전트의 도구처럼, 함수 호출은 모델이 **환경에서 작업을 수행할 능력**을 제공합니다. 
 
-## How does the model "learn" to take an action?
+하지만 함수 호출 기능은 **모델에 의해 학습되며**, 다른 에이전트 기법보다 **프롬프트 의존도가 낮습니다**.
 
-In Unit 1, we explored the general workflow of an agent. Once the user has given some tools to the agent and prompted it with a query, the model will cycle through:
+Unit 1에서는 에이전트가 **도구 사용을 학습하지 않았고**, 우리는 단지 목록을 제공했으며, 모델이 **이 도구들을 활용해 계획을 일반화할 수 있다는 점에 의존했습니다**. 
 
-1. *Think* : What action(s) do I need to take in order to fulfill the objective.
-2. *Act* : Format the action with the correct parameter and stop the generation.
-3. *Observe* : Get back the result from the execution.
+여기에서는 **함수 호출을 통해 에이전트를 도구 사용에 맞춰 미세 조정(학습)합니다**。
 
-In a "typical" conversation with a model through an API, the conversation will alternate between user and assistant messages like this:
+
+## 모델은 어떻게 “동작 수행”을 학습할까요?[[how-does-the-model-learn-to-take-an-action]]
+
+Unit 1에서는 에이전트의 일반적인 워크플로우를 살펴보았습니다. 사용자가 에이전트에 도구를 제공하고 질의를 전달하면, 모델은 다음 과정을 반복합니다:
+
+1. *Think*: 목표를 달성하기 위해 어떤 동작을 수행해야 할지 결정합니다.  
+2. *Act*: 올바른 인수로 동작을 포맷하고 생성이 중단됩니다.  
+3. *Observe*: 실행 결과를 받아옵니다.
+
+
+API를 통한 “일반적인” 대화에서는, 아래와 같이 사용자와 어시스턴트 메시지가 번갈아 나타납니다:
 
 ```python
 conversation = [
@@ -24,54 +31,3 @@ conversation = [
     {"role": "assistant", "content": "I'd be happy to help. Could you provide your order number?"},
     {"role": "user", "content": "It's ORDER-123"},
 ]
-```
-
-Function-calling brings **new roles to the conversation**! 
-
-1. One new role for an **Action** 
-2. One new role for an **Observation** 
-
-If we take the [Mistral API](https://docs.mistral.ai/capabilities/function_calling/) as an example, it would look like this:
-
-```python
-conversation = [
-    {
-        "role": "user",
-        "content": "What's the status of my transaction T1001?"
-    },
-    {
-        "role": "assistant",
-        "content": "",
-        "function_call": {
-            "name": "retrieve_payment_status",
-            "arguments": "{\"transaction_id\": \"T1001\"}"
-        }
-    },
-    {
-        "role": "tool",
-        "name": "retrieve_payment_status",
-        "content": "{\"status\": \"Paid\"}"
-    },
-    {
-        "role": "assistant",
-        "content": "Your transaction T1001 has been successfully paid."
-    }
-]
-```
-
-> ... But you said there's a new role for function calls?
-
-**Yes and no**, in this case and in a lot of other APIs, the model formats the action to take as an "assistant" message. The chat template will then represent this as **special tokens** for function-calling.
-
-- `[AVAILABLE_TOOLS]` – Start the list of available tools  
-- `[/AVAILABLE_TOOLS]` – End the list of available tools  
-- `[TOOL_CALLS]` – Make a call to a tool (i.e., take an "Action")  
-- `[TOOL_RESULTS]` – "Observe" the result of the action  
-- `[/TOOL_RESULTS]` – End of the observation (i.e., the model can decode again)
-
-We'll talk again about function-calling in this course, but if you want to dive deeper you can check [this excellent documentation section](https://docs.mistral.ai/capabilities/function_calling/).
-
----
-Now that we learned what function-calling is and how it works, let's **add some function-calling capabilities to a model that does not have those capacities yet**: [google/gemma-2-2b-it](https://huggingface.co/google/gemma-2-2b-it), by appending some new special tokens to the model.
-
-To be able to do that, **we need first to understand fine-tuning and LoRA**. 
