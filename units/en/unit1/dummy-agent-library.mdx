@@ -34,7 +34,7 @@ from huggingface_hub import InferenceClient
 client = InferenceClient(model="meta-llama/Llama-4-Scout-17B-16E-Instruct")
 ```
 
-We use the `chat` method since is a convenient and reliable way to apply chat templates:
+We use the `chat` method since it is a convenient and reliable way to apply chat templates:
 
 ```python
 output = client.chat.completions.create(
@@ -211,8 +211,8 @@ Action:
   "action": "get_weather",
   "action_input": {"location": "London"}
 }
-```
-Observation:
+
+
 ````
 
 Much Better!
@@ -239,7 +239,7 @@ Let's concatenate the system prompt, the base prompt, the completion until funct
 messages=[
     {"role": "system", "content": SYSTEM_PROMPT},
     {"role": "user", "content": "What's the weather in London ?"},
-    {"role": "assistant", "content": output.choices[0].message.content + get_weather('London')},
+    {"role": "assistant", "content": output.choices[0].message.content + "Observation:\n" + get_weather('London')},
 ]
 
 output = client.chat.completions.create(
