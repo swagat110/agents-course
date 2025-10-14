@@ -12,7 +12,7 @@
 4. 내용 분석 및 요약 제공
 5. 문서 관련 특정 지시 실행
 
-## 집사의 워크플로우[[the-butler's-workflow]]
+## 집사의 워크플로우[[the-butlers-workflow]]
 
 만들 워크플로우의 구조는 다음과 같습니다:
 
@@ -138,7 +138,7 @@ divide(a: int, b: int) -> float:
     a를 b로 나눔
 """
     image=state["input_file"]
-    sys_msg = SystemMessage(content=f"당신은 Mr. Wayne과 배트맨을 섬기는 친절한 집사 알프레드입니다. 아래 툴로 문서를 분석하고 계산을 수행할 수 있습니다:\n{textual_description_of_tool} \n 현재 로드된 이미지는: {image}")
+    sys_msg = SystemMessage(content=f"당신은 Mr. Wayne과 배트맨을 섬기는 친절한 집사 알프레드입니다. 아래 도구로 문서를 분석하고 계산을 수행할 수 있습니다:\n{textual_description_of_tool} \n 현재 로드된 이미지는: {image}")
 
     return {
         "messages": [llm_with_tools.invoke([sys_msg] + state["messages"])],
@@ -146,12 +146,12 @@ divide(a: int, b: int) -> float:
     }
 ```
 
-## ReAct 패턴: 집사의 지원 방식[[the-react-pattern-how-i-assist-mr.-wayne]]
+## ReAct 패턴: 집사의 지원 방식[[the-react-pattern-how-i-assist-mr-wayne]]
 
 이 에이전트는 ReAct 패턴(Reason-Act-Observe)을 따릅니다.
 
 1. 문서와 요청을 **이해(Reason)**
-2. 적절한 툴을 **실행(Act)**
+2. 적절한 도구를 **실행(Act)**
 3. 결과를 **관찰(Observe)**
 4. 필요시 반복
 
@@ -169,7 +169,7 @@ builder.add_node("tools", ToolNode(tools))
 builder.add_edge(START, "assistant")
 builder.add_conditional_edges(
     "assistant",
-    # 최신 메시지가 툴을 필요로 하면 tools로 라우팅
+    # 최신 메시지가 도구를 필요로 하면 tools로 라우팅
     # 아니면 직접 응답
     tools_condition,
 )
@@ -180,20 +180,20 @@ react_graph = builder.compile()
 display(Image(react_graph.get_graph(xray=True).draw_mermaid_png()))
 ```
 
-`tools` 노드는 툴 리스트를, `assistant` 노드는 툴이 바인딩된 모델을 의미합니다.
+`tools` 노드는 도구 리스트를, `assistant` 노드는 도구가 바인딩된 모델을 의미합니다.
 그래프에는 `assistant`와 `tools` 노드가 있습니다.
 
-`tools_condition` 엣지는 모델이 툴을 호출하면 tools로, 아니면 End로 흐름을 보냅니다.
+`tools_condition` 엣지는 모델이 도구를 호출하면 tools로, 아니면 End로 흐름을 보냅니다.
 
 이제 한 단계 더 추가합니다:
 
 `tools` 노드를 다시 `assistant`로 연결해 루프를 만듭니다.
 
-- `assistant` 노드 실행 후, `tools_condition`이 모델 출력이 툴 호출인지 확인합니다.
-- 툴 호출이면 흐름이 `tools` 노드로 이동합니다.
+- `assistant` 노드 실행 후, `tools_condition`이 모델 출력이 도구 호출인지 확인합니다.
+- 도구 호출이면 흐름이 `tools` 노드로 이동합니다.
 - `tools` 노드는 다시 `assistant`로 연결됩니다.
-- 이 루프는 모델이 툴 호출을 결정하는 한 계속됩니다.
-- 모델 응답이 툴 호출이 아니면 흐름이 END로 이동해 프로세스가 종료됩니다.
+- 이 루프는 모델이 도구 호출을 결정하는 한 계속됩니다.
+- 모델 응답이 도구 호출이 아니면 흐름이 END로 이동해 프로세스가 종료됩니다.
 
 ![ReAct 패턴](https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/LangGraph/Agent.png)
 
@@ -201,7 +201,7 @@ display(Image(react_graph.get_graph(xray=True).draw_mermaid_png()))
 
 ### 예시 1: 간단한 계산[[example-1-simple-calculations]]
 
-아래는 LangGraph에서 툴을 사용하는 간단한 예시입니다.
+아래는 LangGraph에서 도구를 사용하는 간단한 예시입니다.
 
 ```python
 messages = [HumanMessage(content="6790을 5로 나눠줘")]
@@ -224,7 +224,7 @@ Tool Response: 1358.0
 Alfred: 6790을 5로 나누면 1358.0입니다.
 ```
 
-### 예시 2: Wayne 주인님의 훈련 문서 분석[[example-2-analyzing-master-wayne's-training-documents]]
+### 예시 2: Wayne 주인님의 훈련 문서 분석[[example-2-analyzing-master-waynes-training-documents]]
 
 주인님이 훈련 및 식단 쪽지를 남겼을 때:
 
@@ -257,9 +257,9 @@ Alfred: 저녁 메뉴를 위해 다음 재료를 구입하세요:
 
 나만의 문서 분석 집사를 만들고 싶다면 다음을 고려하세요:
 
-1. **문서 관련 작업별로 명확한 툴 정의**
-2. **툴 호출 간 맥락 유지를 위한 견고한 상태 추적기**
-3. **툴 실패 시 오류 처리 고려**
+1. **문서 관련 작업별로 명확한 도구 정의**
+2. **도구 호출 간 맥락 유지를 위한 견고한 상태 추적기**
+3. **도구 실패 시 오류 처리 고려**
 4. **이전 상호작용 맥락 유지(add_messages 연산자 활용)**
 
 이 원칙을 따르면 Wayne 저택에 어울리는 문서 분석 서비스를 제공할 수 있습니다.

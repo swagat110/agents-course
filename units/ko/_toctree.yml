@@ -15,7 +15,7 @@
   - local: unit1/quiz1
     title: Quick Quiz 1
   - local: unit1/what-are-llms
-    title: LLM이란?
+    title: 대규모 언어 모델(LLM)이란?
   - local: unit1/messages-and-special-tokens
     title: 메세지와 특수 토큰
   - local: unit1/tools
@@ -55,7 +55,7 @@
   - local: unit2/smolagents/tool_calling_agents
     title: 액션을 코드 조각(코드 스니펫)이나 JSON 블롭으로 작성하기
   - local: unit2/smolagents/tools
-    title: Tool 도구 소개
+    title: 도구 소개
   - local: unit2/smolagents/retrieval_agents
     title: 검색 에이전트
   - local: unit2/smolagents/quiz2
@@ -103,7 +103,7 @@
   - local: unit2/langgraph/quiz1
     title: Quick Quiz 1
   - local: unit2/langgraph/conclusion
-    title: Conclusion
+    title: 결론
 - title: Bonus Unit 1. Fine-tuning an LLM for Function-calling
   sections:
   - local: bonus-unit1/introduction
