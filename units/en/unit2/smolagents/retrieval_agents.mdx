@@ -69,8 +69,8 @@ This approach combines predefined knowledge with semantic search to provide cont
 In this example, we'll create a tool that retrieves party planning ideas from a custom knowledge base. We'll use a BM25 retriever to search the knowledge base and return the top results, and `RecursiveCharacterTextSplitter` to split the documents into smaller chunks for more efficient search.
 
 ```python
-from langchain.docstore.document import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.docstore.document import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from smolagents import Tool
 from langchain_community.retrievers import BM25Retriever
 from smolagents import CodeAgent, InferenceClientModel
