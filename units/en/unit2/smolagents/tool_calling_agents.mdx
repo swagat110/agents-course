@@ -50,7 +50,7 @@ Let's revisit the previous example where Alfred started party preparations, but 
 ```python
 from smolagents import ToolCallingAgent, DuckDuckGoSearchTool, InferenceClientModel
 
-agent = ToolCallingAgent(tools=[DuckDuckGoSearchTool()], model=InferenceClientModel())
+agent = ToolCallingAgent(tools=[DuckDuckGoSearchTool()], model=InferenceClientModel(model_id="meta-llama/Llama-3.3-70B-Instruct"))
 
 agent.run("Search for the best music recommendations for a party at the Wayne's mansion.")
 ```
