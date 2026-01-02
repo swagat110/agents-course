@@ -7,9 +7,8 @@ askForHelpUrl="http://hf.co/join/discord" />
 
 # Building Agentic RAG Systems
 
-<Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/retrieval_agents.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
-</Tip>
+> [!TIP]
+> You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/retrieval_agents.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
 
 Retrieval Augmented Generation (RAG) systems combine the capabilities of data retrieval and generation models to provide context-aware responses. For example, a user's query is passed to a search engine, and the retrieved results are given to the model along with the query. The model then generates a response based on the query and retrieved information.
 
@@ -70,8 +69,8 @@ This approach combines predefined knowledge with semantic search to provide cont
 In this example, we'll create a tool that retrieves party planning ideas from a custom knowledge base. We'll use a BM25 retriever to search the knowledge base and return the top results, and `RecursiveCharacterTextSplitter` to split the documents into smaller chunks for more efficient search.
 
 ```python
-from langchain.docstore.document import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.docstore.document import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from smolagents import Tool
 from langchain_community.retrievers import BM25Retriever
 from smolagents import CodeAgent, InferenceClientModel

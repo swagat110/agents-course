@@ -49,9 +49,8 @@ Using this approach, we define a function with:
 
 <img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit2/smolagents/alfred-catering.jpg" alt="Alfred Catering"/>
 
-<Tip>
-You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/tools.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
-</Tip>
+> [!TIP]
+> You can follow the code in <a href="https://huggingface.co/agents-course/notebooks/blob/main/unit2/smolagents/tools.ipynb" target="_blank">this notebook</a> that you can run using Google Colab.
 
 Let's imagine that Alfred has already decided on the menu for the party, but now he needs help preparing food for such a large number of guests. To do so, he would like to hire a catering service and needs to identify the highest-rated options available. Alfred can leverage a tool to search for the best catering services in his area.
 
@@ -249,6 +248,21 @@ You can easily load LangChain tools using the `Tool.from_langchain()` method. Al
 By using `Tool.from_langchain()`, Alfred effortlessly adds advanced search functionalities to his smolagent, enabling him to discover exclusive party ideas and services with just a few commands.
 
 Here's how he does it:
+
+We first need to install the `langchain` integration for `smolagents`.
+
+```bash
+pip install -U langchain-community
+```
+
+After installing the langchain integration, make sure to set your SerpAPI key.
+This is required for search-based tools such as `SerpAPITool`:
+
+```python
+os.environ['SERPAPI_API_KEY'] = '...'
+```
+
+You can create a SerpAPI key [here](https://serpapi.com/)
 
 ```python
 from langchain.agents import load_tools
