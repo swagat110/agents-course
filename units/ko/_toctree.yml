@@ -104,6 +104,10 @@
     title: Quick Quiz 1
   - local: unit2/langgraph/conclusion
     title: 결론
+- title: Unit 4. Final Project - Create, Test, and Certify Your Agent
+  sections:
+  - local: unit4/introduction
+    title: Introduction to the Final Unit
 - title: Bonus Unit 1. Fine-tuning an LLM for Function-calling
   sections:
   - local: bonus-unit1/introduction
